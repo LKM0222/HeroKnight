@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,11 +7,15 @@ public class Player : Unit
     [Header("Refrence")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
+    
 
     [Header("Base Data")]
     [SerializeField] Vector2 inputVec2;
     [SerializeField] Vector3 moveDirection;
     [SerializeField] bool isGrounded;
+
+    public bool IsGrounded => isGrounded;
+    public float AirSpeedY => rb.linearVelocityY;
 
     void Update()
     {
@@ -29,6 +34,8 @@ public class Player : Unit
         if (inputVec2 != null)
         {
             moveDirection = new Vector3(inputVec2.x, 0, inputVec2.y);
+
+            anim.SetRunAnim((int)value.Get<Vector2>().x, isGrounded);
         }
     }
 
@@ -41,7 +48,14 @@ public class Player : Unit
 
             // 점프중엔, IsTrigger 체크해서, 충돌 판정 안받게 -> 나중에 점프중엔 피격 안되는거 아닌가??
             boxCollider.isTrigger = true;
+
+            anim.SetAnim(AnimType.Jump);
         }
+    }
+
+    void OnAttack(InputValue value)
+    {
+        anim.SetAnim(AnimType.Attack);
     }
 
 
