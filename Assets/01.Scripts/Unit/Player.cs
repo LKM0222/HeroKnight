@@ -13,18 +13,27 @@ public class Player : Unit
     [SerializeField] Vector2 inputVec2;
     [SerializeField] Vector3 moveDirection;
     [SerializeField] bool isGrounded;
+    [SerializeField] bool isRoll;
+    [SerializeField] bool isBlocked;
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
+    public bool IsRoll{ get { return isRoll; } set{ isRoll = value; } }
 
     void Update()
     {
-        transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
+        Move();
     }
 
     void FixedUpdate()
     {
         CheckGround();
+    }
+
+    void Move()
+    {
+        if (isBlocked) return;
+        transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
     }
 
     void OnMove(InputValue value)
@@ -41,21 +50,42 @@ public class Player : Unit
 
     void OnJump(InputValue value)
     {
-        if (isGrounded)
+        if (!isGrounded || isBlocked) return;
+
+        rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        isGrounded = false;
+
+        // 점프중엔, IsTrigger 체크해서, 충돌 판정 안받게 -> 나중에 점프중엔 피격 안되는거 아닌가??
+        boxCollider.isTrigger = true;
+
+        if (!isRoll)
         {
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-            isGrounded = false;
-
-            // 점프중엔, IsTrigger 체크해서, 충돌 판정 안받게 -> 나중에 점프중엔 피격 안되는거 아닌가??
-            boxCollider.isTrigger = true;
-
             anim.SetAnim(AnimType.Jump);
         }
     }
 
     void OnAttack(InputValue value)
     {
+        if (isRoll || isBlocked) return;
+        
         anim.SetAnim(AnimType.Attack);
+        
+    }
+
+    void OnRoll(InputValue value)
+    {
+        if (isRoll || isBlocked) return;
+
+        isRoll = true;
+        anim.SetAnim(AnimType.Roll);
+    }
+
+    void OnBlock(InputValue value)
+    {
+        if (isRoll) return;
+
+        isBlocked = value.isPressed;
+        anim.SetBlockAnim(isBlocked);
     }
 
 

@@ -65,6 +65,11 @@ public class AnimatorController : MonoBehaviour
                     animator.SetTrigger(animKeyDict[AnimKey.Jump]);
                 }
                 break;
+            case AnimType.Roll:
+                {
+                    animator.SetTrigger(animKeyDict[AnimKey.Roll]);
+                }
+                break;
         }
     }
 
@@ -77,8 +82,12 @@ public class AnimatorController : MonoBehaviour
 
     public void SetBlockAnim(bool isBlocked) // 피격도중, block상태라면 여기로 넘어와야됨.
     {
-        animator.SetTrigger(animKeyDict[AnimKey.Block]);
         animator.SetBool(animKeyDict[AnimKey.IdleBlock], isBlocked);
+
+        if (isBlocked)
+        {
+            animator.SetTrigger(animKeyDict[AnimKey.Block]);
+        }
     }
 
     public void CheckGrounded(float airSpeedY, bool isGrounded)
@@ -86,4 +95,11 @@ public class AnimatorController : MonoBehaviour
         animator.SetBool(animKeyDict[AnimKey.Grounded], isGrounded);
         animator.SetFloat(animKeyDict[AnimKey.AirSpeedY], airSpeedY);
     }
+
+    public void AnimEvent_RollEnd()
+    {
+        player.IsRoll = false;
+    }
+
+
 }

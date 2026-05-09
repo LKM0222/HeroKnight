@@ -32,6 +32,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Roll",
+                    "type": "Button",
+                    "id": "66eacab2-2dee-4a28-b3ca-519fa5200cc1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Block",
+                    "type": "Button",
+                    "id": "f95afaa8-e4a7-464c-810c-5db30feb0891",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -71,7 +89,7 @@
                 {
                     "name": "",
                     "id": "38dec2fe-d468-455a-89df-a90ffaf4e9c9",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -81,8 +99,8 @@
                 },
                 {
                     "name": "",
-                    "id": "172963af-9aee-4806-8afa-552ec8b37c37",
-                    "path": "",
+                    "id": "ddb421d3-bc79-43f7-8856-1d5fc6738458",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -92,12 +110,23 @@
                 },
                 {
                     "name": "",
-                    "id": "ddb421d3-bc79-43f7-8856-1d5fc6738458",
-                    "path": "<Keyboard>/a",
+                    "id": "1a9563e4-c284-46b3-95db-3cff2e9dc74f",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Roll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9067b4e-bd7c-42d8-8779-726bc9540a73",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Block",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
