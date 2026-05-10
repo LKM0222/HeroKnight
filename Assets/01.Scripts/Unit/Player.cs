@@ -8,7 +8,7 @@ public class Player : Unit
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_Player anim;
-    
+
 
     [Header("Base Data")]
     [SerializeField] Vector2 inputVec2;
@@ -16,10 +16,12 @@ public class Player : Unit
     [SerializeField] bool isGrounded;
     [SerializeField] bool isRoll;
     [SerializeField] bool isBlocked;
+    [SerializeField] Enemy target;
+    [SerializeField] Vector2 attackOffset; // 공격 레이 쏘는 오프셋
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
-    public bool IsRoll{ get { return isRoll; } set{ isRoll = value; } }
+    public bool IsRoll { get { return isRoll; } set { isRoll = value; } }
 
     void Update()
     {
@@ -35,6 +37,17 @@ public class Player : Unit
     {
         if (isBlocked) return;
         transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
+    }
+
+    public void Hit(float atk)
+    {
+        if (isBlocked)
+        {
+            anim.SetBlcokSuccessAnim();
+            return;
+        }
+        hp -= atk;
+        anim.SetAnim(AnimType_Player.Hurt);
     }
 
     void OnMove(InputValue value)
@@ -68,9 +81,32 @@ public class Player : Unit
     void OnAttack(InputValue value)
     {
         if (isRoll || isBlocked) return;
-        
+
+        // 공격을 만들건데
+        // 공격의 종류에 따라서 공격이 다르게 적용되게 해야되긴해
+        // 그래도 일단 공격을 만들어 보자
+        // 버튼이 눌렸을 떄, 플레이어 앞으로 공격사거리만큼 Ray를 쏴서
+        // Ray에 걸린 모든 오브젝트를 파악 (근데 Ray는 처음 부딛힌 하나만 감지할텐데)
+        // 그떄, target에게 데미지를 입힘
+
+        Vector2 origin = (Vector2)transform.position + attackOffset;
+        Vector2 dir = Vector2.right * anim.LookingDir();
+        int enemyMask = LayerMask.GetMask("Enemy");
+
+
+        RaycastHit2D rayHit = Physics2D.Raycast(origin, dir, atkRange, enemyMask);
+        Debug.DrawRay(origin, dir * atkRange, Color.blue, 0.5f);
+
+        target = rayHit.collider?.GetComponent<Enemy>();
+
+        if (target != null)
+        {
+            target.Hit(atk);
+            Debug.Log($"Hit {target.name}");
+            target = null;
+        }
+
         anim.SetAnim(AnimType_Player.Attack);
-        
     }
 
     void OnRoll(InputValue value)
@@ -92,7 +128,7 @@ public class Player : Unit
 
     // Private Method
     void CheckGround()
-    {   
+    {
         // 점프 후, 아래로 내려가고 있을때만
         int mapMask = LayerMask.GetMask("Map");
         Vector2 origin = boxCollider.bounds.center;

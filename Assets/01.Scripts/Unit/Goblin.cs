@@ -10,8 +10,10 @@ public class Goblin : Enemy
     [SerializeField] AnimatorController_Goblin anim;
 
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // FSM 만들어야됨.
         StateManagement(EnemyState.Idle);
     }
@@ -151,6 +153,12 @@ public class Goblin : Enemy
 
         if (hp <= 0f) StateManagement(EnemyState.Death);
         else anim.SetAnim(AnimType_Goblin.Hit);
+    }
+
+    public void Attack()
+    {
+        if (target == null) return;
+        target.Hit(atk);
     }
 
     protected override void Move()

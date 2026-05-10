@@ -11,7 +11,6 @@ public abstract class Enemy : Unit
     [SerializeField] protected Player target;
     [SerializeField] protected Vector2 moveDir;
     [SerializeField] protected float findRange;
-    [SerializeField] protected float atkRange;
 
     [Header("Refrence")]
     [SerializeField] CircleCollider2D findRangeCollider;
@@ -35,10 +34,14 @@ public abstract class Enemy : Unit
     public virtual void Hit(float dmg) // 이건 외부에서 공격할 때 호출해야되니깐 public으로 설정
     {
         hp -= dmg;
+        float hpRatio = hp / maxHP;
+        hpBar.SetHPBar(hpRatio);
     }
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         findRangeCollider.radius = findRange;
         findRangeCollider.isTrigger = true;
     }

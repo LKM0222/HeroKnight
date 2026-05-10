@@ -1,16 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HPBar : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] Image fillImg;
 
-    // Update is called once per frame
-    void Update()
+    public void SetHPBar(float hpRatio)
     {
-        
+        fillImg.fillAmount = hpRatio;
     }
 }

@@ -73,7 +73,7 @@ public class AnimatorController_Player : AnimatorController
 
     public void SetRunAnim(int value, bool isGrounded)
     {
-        if(value != 0) sr.flipX = value < 0;
+        if (value != 0) sr.flipX = value < 0;
         animator.SetInteger(animDict[AnimKey_Player.AnimState], Math.Abs(value));
         animator.SetBool(animDict[AnimKey_Player.Grounded], isGrounded);
     }
@@ -81,11 +81,11 @@ public class AnimatorController_Player : AnimatorController
     public void SetBlockAnim(bool isBlocked) // 피격도중, block상태라면 여기로 넘어와야됨.
     {
         animator.SetBool(animDict[AnimKey_Player.IdleBlock], isBlocked);
+    }
 
-        if (isBlocked)
-        {
-            animator.SetTrigger(animDict[AnimKey_Player.Block]);
-        }
+    public void SetBlcokSuccessAnim()
+    {
+        animator.SetTrigger(animDict[AnimKey_Player.Block]);
     }
 
     public void CheckGrounded(float airSpeedY, bool isGrounded)
@@ -99,5 +99,8 @@ public class AnimatorController_Player : AnimatorController
         player.IsRoll = false;
     }
 
-
+    public int LookingDir()
+    {
+        return sr.flipX ? -1 : 1;
+    }
 }

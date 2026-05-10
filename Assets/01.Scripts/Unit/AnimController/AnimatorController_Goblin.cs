@@ -6,6 +6,9 @@ using UnityEngine;
 [Serializable] enum AnimKey_Goblin{ AttackType, Attack, Hit, Death, MoveDir }
 public class AnimatorController_Goblin : AnimatorController
 {
+    bool isAttack = false;
+
+    [SerializeField] Goblin owner;
     Dictionary<AnimKey_Goblin, int> animDict = new Dictionary<AnimKey_Goblin, int>();
 
 
@@ -29,6 +32,7 @@ public class AnimatorController_Goblin : AnimatorController
         {
             case AnimType_Goblin.Hit:
                 {
+                    if (isAttack) return;
                     animator.SetTrigger(animDict[AnimKey_Goblin.Hit]);
                 }
                 break;
@@ -43,15 +47,25 @@ public class AnimatorController_Goblin : AnimatorController
 
     public void SetRunAnim(float value)
     {
-        if(value != 0) sr.flipX = value < 0;
+        if (value != 0) sr.flipX = value < 0;
         animator.SetInteger(animDict[AnimKey_Goblin.MoveDir], (int)Math.Abs(value));
     }
 
     public void SetAttackAnim(float attackType)
     {
         SetRunAnim(0);
-
+        isAttack = true;
         animator.SetFloat(animDict[AnimKey_Goblin.AttackType], attackType);
         animator.SetTrigger(animDict[AnimKey_Goblin.Attack]);
+    }
+
+    public void AnimEvent_AttackEnd()
+    {
+        isAttack = false;
+    }
+
+    public void AnimEvent_Attack()
+    {
+        owner.Attack();
     }
 }
