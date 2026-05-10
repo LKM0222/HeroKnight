@@ -1354,6 +1354,7 @@ MonoBehaviour:
   findRange: 2
   atkRange: 1
   findRangeCollider: {fileID: 1154860893}
+  waitTime: 0
   findTime: 2
   atkCooltime: 1
   rb: {fileID: 1570256204}

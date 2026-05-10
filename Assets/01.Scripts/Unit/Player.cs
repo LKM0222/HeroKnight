@@ -7,6 +7,7 @@ public class Player : Unit
     [Header("Refrence")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
+    [SerializeField] AnimatorController_Player anim;
     
 
     [Header("Base Data")]
@@ -60,7 +61,7 @@ public class Player : Unit
 
         if (!isRoll)
         {
-            anim.SetAnim(AnimType.Jump);
+            anim.SetAnim(AnimType_Player.Jump);
         }
     }
 
@@ -68,7 +69,7 @@ public class Player : Unit
     {
         if (isRoll || isBlocked) return;
         
-        anim.SetAnim(AnimType.Attack);
+        anim.SetAnim(AnimType_Player.Attack);
         
     }
 
@@ -77,7 +78,7 @@ public class Player : Unit
         if (isRoll || isBlocked) return;
 
         isRoll = true;
-        anim.SetAnim(AnimType.Roll);
+        anim.SetAnim(AnimType_Player.Roll);
     }
 
     void OnBlock(InputValue value)
