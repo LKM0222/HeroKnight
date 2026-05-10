@@ -22,6 +22,10 @@ public abstract class Enemy : Unit
 
     protected Coroutine nowStateCoroutine;
 
+    protected Vector2 toTarget => target == null ? Vector2.zero : (Vector2)(target.transform.position - transform.position);
+    protected float dist => Mathf.Abs(toTarget.x);
+
+
     // 간단하게 Idle -> Chase -> Attack 이렇게만 만들면 됨.
     protected abstract void StateManagement(EnemyState state);
 
@@ -63,6 +67,12 @@ public abstract class Enemy : Unit
         transform.Translate(moveDir * Time.deltaTime * moveSpeed);
     }
 
+    public virtual void Attack()
+    {
+        if (target == null) return;
+        target.Hit(atk);
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer.Equals(7))
@@ -92,5 +102,15 @@ public abstract class Enemy : Unit
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(this.transform.position, atkRange);
+    }
+
+    protected bool CanAttack()
+    {
+        return dist <= atkRange;
+    }
+
+    protected void SetMoveDir()
+    {
+        moveDir = dist > 0.0001f ? new Vector2(Mathf.Sign(toTarget.x), 0f) : Vector2.zero;
     }
 }

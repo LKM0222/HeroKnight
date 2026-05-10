@@ -3767,8 +3767,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2079185949}
   - {fileID: 609866922}
+  - {fileID: 2079185949}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1947338348
@@ -3811,8 +3811,8 @@ MonoBehaviour:
   findRange: 6
   findRangeCollider: {fileID: 2079185948}
   waitTime: 0
-  findTime: 3
-  atkCooltime: 2
+  findTime: 0
+  atkCooltime: 0
   rb: {fileID: 1947338345}
   boxCollider: {fileID: 1947338344}
   anim: {fileID: 1947338348}
@@ -4412,8 +4412,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2079185949}
   - component: {fileID: 2079185948}
-  m_Layer: 0
-  m_Name: FindRange
+  m_Layer: 8
+  m_Name: FindRangeCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

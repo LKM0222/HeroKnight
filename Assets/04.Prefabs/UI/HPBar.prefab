@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5194573216744611038}
   - component: {fileID: 8555062802940193024}
   - component: {fileID: 1596130793624519286}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: HPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 4271311294071260433}
   - component: {fileID: 481855040214578148}
   - component: {fileID: 2812306002204334932}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: HPBarFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

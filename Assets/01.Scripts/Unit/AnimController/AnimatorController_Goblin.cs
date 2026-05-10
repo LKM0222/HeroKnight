@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable] public enum AnimType_Goblin { Idle, Attack, Run, Hit, Death }
-[Serializable] enum AnimKey_Goblin{ AttackType, Attack, Hit, Death, MoveDir }
-public class AnimatorController_Goblin : AnimatorController
+[Serializable] enum AnimKey_Goblin { AttackType, Attack, Hit, Death, MoveDir }
+
+public class AnimatorController_Goblin : AnimatorController_Enemy
 {
-    bool isAttack = false;
+    
 
     [SerializeField] Goblin owner;
     Dictionary<AnimKey_Goblin, int> animDict = new Dictionary<AnimKey_Goblin, int>();

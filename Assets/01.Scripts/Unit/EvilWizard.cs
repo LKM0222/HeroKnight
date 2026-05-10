@@ -1,13 +1,14 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-public class Goblin : Enemy
+
+
+public class EvilWizard : Enemy
 {
     [Header("Refresnce")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
-    [SerializeField] AnimatorController_Goblin anim;
+    [SerializeField] AnimatorController_EvilWizard anim;
 
 
     protected override void Start()
@@ -28,6 +29,7 @@ public class Goblin : Enemy
             case EnemyState.Attack: ChangeCoroutine(StartCoroutine(AttackCoroutine())); break;
         }
     }
+
 
     protected override IEnumerator IdelCoroutine()
     {
@@ -106,7 +108,7 @@ public class Goblin : Enemy
                 StateManagement(EnemyState.Attack);
                 yield break;
             }
-            
+
             SetMoveDir();
             Move();
             yield return null;
@@ -129,7 +131,12 @@ public class Goblin : Enemy
             float time = 0f;
             while (time < atkCooltime)
             {
-                if (target == null) break; // 만약 target이 사라졌다면 쿨타임 종료
+                if (!CanAttack()) // 타겟이 공격 사거리에서 벗어났다면 다시 쫒아감
+                {
+                    StateManagement(EnemyState.Chase);
+                    yield break;
+                }
+                // if (target == null) break; // 만약 target이 사라졌다면 쿨타임 종료
 
                 var deltaTime = Time.deltaTime;
                 time += deltaTime;
@@ -144,7 +151,7 @@ public class Goblin : Enemy
     protected override IEnumerator DeathCoroutine()
     {
         yield return null;
-        anim.SetAnim(AnimType_Goblin.Death);
+        anim.SetAnim(AnimKey_EvilWizard.Death);
     }
 
     public override void Hit(float atk)
@@ -152,7 +159,7 @@ public class Goblin : Enemy
         base.Hit(atk);
 
         if (hp <= 0f) StateManagement(EnemyState.Death);
-        else anim.SetAnim(AnimType_Goblin.Hit);
+        else anim.SetAnim(AnimKey_EvilWizard.Hit);
 
         floatingText.SpawnText(TextType.Hit, atk.ToString());
     }
