@@ -153,6 +153,8 @@ public class Goblin : Enemy
 
         if (hp <= 0f) StateManagement(EnemyState.Death);
         else anim.SetAnim(AnimType_Goblin.Hit);
+
+        floatingText.SpawnText(TextType.Hit, atk.ToString());
     }
 
     public void Attack()

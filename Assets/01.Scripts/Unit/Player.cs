@@ -44,9 +44,11 @@ public class Player : Unit
         if (isBlocked)
         {
             anim.SetBlcokSuccessAnim();
+            floatingText.SpawnText(TextType.Nomal, "Defenced");
             return;
         }
         hp -= atk;
+        floatingText.SpawnText(TextType.Hit, atk.ToString());
         anim.SetAnim(AnimType_Player.Hurt);
     }
 

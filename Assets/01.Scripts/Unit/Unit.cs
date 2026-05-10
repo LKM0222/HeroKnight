@@ -12,6 +12,7 @@ public class Unit : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] protected HPBar hpBar;
+    [SerializeField] protected FloatingText floatingText;
 
     protected virtual void Start()
     {
