@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -10,6 +11,8 @@ public class EvilWizard : Enemy
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_EvilWizard anim;
 
+    [SerializeField] Projectile projectilePrefab;
+    [SerializeField] List<Projectile> projectileList = new List<Projectile>();
 
     protected override void Start()
     {
@@ -166,12 +169,28 @@ public class EvilWizard : Enemy
 
     public override void Attack()
     {
-        base.Attack();
+        // base.Attack();
+        SpawnProjectile();
     }
 
     protected override void Move()
     {
         base.Move();
         anim.SetRunAnim(moveDir.x);
+    }
+
+    void SpawnProjectile()
+    {
+        Debug.Log("Spawn Fireball");
+
+        var unActiveObj = projectileList.Find(x => x.gameObject.activeSelf.Equals(false));
+
+        if (unActiveObj == null)
+        {
+            unActiveObj = Instantiate(projectilePrefab);
+            projectileList.Add(unActiveObj);
+        }
+
+        unActiveObj.Init(this.transform.position, toTarget, atk);
     }
 }
