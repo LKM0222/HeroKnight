@@ -14,6 +14,10 @@ public class Unit : MonoBehaviour
     [SerializeField] protected HPBar hpBar;
     [SerializeField] protected FloatingText floatingText;
 
+    // Property
+    public float MaxHP => maxHP;
+    public float HP => hp;
+
     protected virtual void Start()
     {
         hp = maxHP;
