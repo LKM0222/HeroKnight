@@ -11,6 +11,8 @@ public abstract class Enemy : Unit
     [SerializeField] protected Player target;
     [SerializeField] protected Vector2 moveDir;
     [SerializeField] protected float findRange;
+    [SerializeField] public EnemyType enemyType;
+
 
     [Header("Refrence")]
     [SerializeField] CircleCollider2D findRangeCollider;
