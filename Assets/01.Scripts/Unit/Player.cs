@@ -18,14 +18,25 @@ public class Player : Unit
     [SerializeField] bool isBlocked;
     [SerializeField] Enemy target;
     [SerializeField] Vector2 attackOffset; // 공격 레이 쏘는 오프셋
+    [SerializeField] private float maxMana;
+    [SerializeField] private float mana;
+    [SerializeField] private float recoveryManaAmount;
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
     public bool IsRoll { get { return isRoll; } set { isRoll = value; } }
+    public float MaxMana => maxMana;
+    public float Mana => mana;
+
+    protected override void Start()
+    {
+        base.Start();
+    }
 
     void Update()
     {
         Move();
+        RecoveryMana();
     }
 
     void FixedUpdate()
@@ -109,6 +120,7 @@ public class Player : Unit
         }
 
         anim.SetAnim(AnimType_Player.Attack);
+        GameManager.Instance.SetComboUI();
     }
 
     void OnRoll(InputValue value)
@@ -152,5 +164,10 @@ public class Player : Unit
                 }
             }
         }
+    }
+
+    public void RecoveryMana()
+    {
+        mana = Mathf.Clamp(mana + recoveryManaAmount, 0f, maxMana);
     }
 }

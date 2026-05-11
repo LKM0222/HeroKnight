@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,15 +9,33 @@ public class MainUI : MonoBehaviour
     [Header("Slider")]
     [SerializeField] Slider hpSlider;
     [SerializeField] TMP_Text hpText;
-    [SerializeField] Slider expSlider;
-    [SerializeField] TMP_Text expText;
+    [SerializeField] Slider mpSlider;
+    [SerializeField] TMP_Text mpText;
 
     [Header("Key Guid")]
     [SerializeField] List<KeyGuid> keyGuidList = new List<KeyGuid>();
 
+    [Header("Combo")]
+    [SerializeField] Image comboImg;
+    [SerializeField] TMP_Text comboText;
+    [SerializeField] TMP_Text comboTitle;
+    [SerializeField] float visibleImgTime;
+    [SerializeField] float uiVanishTime;
+    [SerializeField] float time;
+
+    Coroutine comboCoroutine = null;
+
+    void Start()
+    {
+        comboImg.gameObject.SetActive(false);
+        comboText.gameObject.SetActive(false);
+        comboTitle.gameObject.SetActive(false);
+    }
+
     void Update()
     {
         SetHPSlider();
+        SetManaSlider();
     }
 
     void SetHPSlider()
@@ -24,11 +43,78 @@ public class MainUI : MonoBehaviour
         hpSlider.maxValue = GameManager.Instance.player.MaxHP;
         hpSlider.value = GameManager.Instance.player.HP;
 
-        hpText.text = $"{GameManager.Instance.player.HP}/{GameManager.Instance.player.MaxHP}";
+        hpText.text = $"{GameManager.Instance.player.HP:0}/{GameManager.Instance.player.MaxHP:0}";
     }
 
-    void SetEXPSlider()
+    void SetManaSlider()
     {
+        mpSlider.maxValue = GameManager.Instance.player.MaxMana;
+        mpSlider.value = GameManager.Instance.player.Mana;
 
+        mpText.text = $"{GameManager.Instance.player.Mana:0}/{GameManager.Instance.player.MaxMana:0}";
+    }
+
+    public void SetComboUI()
+    {
+        if (comboCoroutine != null) // 아직 코루틴이 실행중임 -> 기존 코루틴 반복
+        {
+            time = 0; // 쿨타임 초기화
+            GameManager.Instance.combo++;
+        }
+        else
+        {
+            GameManager.Instance.combo = 1;
+            comboCoroutine = StartCoroutine(ComboCoroutine());
+        }
+        
+        comboText.text = GameManager.Instance.combo.ToString();
+    }
+
+    IEnumerator ComboCoroutine()
+    {
+        yield return null;
+        time = 0f;
+
+        while (time < (visibleImgTime + uiVanishTime))
+        {
+            comboImg.gameObject.SetActive(true);
+            comboText.gameObject.SetActive(true);
+            comboTitle.gameObject.SetActive(true);
+
+
+            while (time < visibleImgTime)
+            {
+                var deltaTime = Time.deltaTime;
+                time += deltaTime;
+
+                comboImg.color = new Color(1f, 1f, 1f, 1f);
+                comboText.color = new Color(1f, 1f, 1f, 1f);
+                comboTitle.color = new Color(1f, 0.6057305f, 0f, 1f);
+
+                yield return null;
+            }
+
+            while (time - visibleImgTime < uiVanishTime)
+            {
+                if (time < visibleImgTime) break;
+
+                var deltaTime = Time.deltaTime;
+                time += deltaTime;
+
+                // 시간 비율에 맞춰서 투명화 진행
+                float i = 1f - Mathf.Clamp01((time - visibleImgTime) / uiVanishTime);
+                comboImg.color = new Color(1f, 1f, 1f, i);
+                comboText.color = new Color(1f, 1f, 1f, i);
+                comboTitle.color = new Color(1f, 0.6057305f, 0f, i);
+
+                yield return null;
+            }
+        }
+
+        // 다 끝나면 코루틴 null
+        comboImg.gameObject.SetActive(false);
+        comboText.gameObject.SetActive(false);
+        comboTitle.gameObject.SetActive(false);
+        comboCoroutine = null;
     }
 }

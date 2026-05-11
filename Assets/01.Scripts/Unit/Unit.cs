@@ -21,7 +21,5 @@ public class Unit : MonoBehaviour
     protected virtual void Start()
     {
         hp = maxHP;
-        float hpRatio = hp / maxHP;
-        hpBar.SetHPBar(hpRatio);
     }
 }

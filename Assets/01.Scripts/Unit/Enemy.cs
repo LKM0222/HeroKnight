@@ -46,6 +46,9 @@ public abstract class Enemy : Unit
     {
         base.Start();
 
+        float hpRatio = hp / maxHP;
+        hpBar.SetHPBar(hpRatio);
+
         findRangeCollider.radius = findRange;
         findRangeCollider.isTrigger = true;
     }
