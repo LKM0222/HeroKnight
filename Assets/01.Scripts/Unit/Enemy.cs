@@ -51,6 +51,8 @@ public abstract class Enemy : Unit
 
         findRangeCollider.radius = findRange;
         findRangeCollider.isTrigger = true;
+
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
     }
 
 
@@ -73,6 +75,11 @@ public abstract class Enemy : Unit
     public virtual void Attack()
     {
         if (target == null) return;
+        if (!target.gameObject.layer.Equals(LayerMask.NameToLayer("Player")))
+        {
+            target = null;
+            return;
+        }
         target.Hit(atk);
     }
 

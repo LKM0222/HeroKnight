@@ -7,9 +7,7 @@ using UnityEngine;
 
 public class AnimatorController_Goblin : AnimatorController_Enemy
 {
-    
-
-    [SerializeField] Goblin owner;
+    Goblin goblin => base.owner as Goblin;
     Dictionary<AnimKey_Goblin, int> animDict = new Dictionary<AnimKey_Goblin, int>();
 
 
@@ -40,6 +38,7 @@ public class AnimatorController_Goblin : AnimatorController_Enemy
 
             case AnimType_Goblin.Death:
                 {
+                    StartCoroutine(DeathCoroutine());
                     animator.SetTrigger(animDict[AnimKey_Goblin.Death]);
                 }
                 break;
@@ -67,6 +66,6 @@ public class AnimatorController_Goblin : AnimatorController_Enemy
 
     public void AnimEvent_Attack()
     {
-        owner.Attack();
+        goblin.Attack();
     }
 }

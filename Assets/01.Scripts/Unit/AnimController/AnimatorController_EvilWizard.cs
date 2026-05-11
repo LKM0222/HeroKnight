@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class AnimatorController_EvilWizard : AnimatorController_Enemy
 {
-    [SerializeField] EvilWizard owner;
+    EvilWizard evilWizard => base.owner as EvilWizard;
 
     Dictionary<AnimKey_EvilWizard, int> animDict = new Dictionary<AnimKey_EvilWizard, int>();
     void Start()
@@ -38,6 +38,7 @@ public class AnimatorController_EvilWizard : AnimatorController_Enemy
 
             case AnimKey_EvilWizard.Death:
                 {
+                    StartCoroutine(DeathCoroutine());
                     animator.SetTrigger(animDict[AnimKey_EvilWizard.Death]);
                 }
                 break;
@@ -64,6 +65,6 @@ public class AnimatorController_EvilWizard : AnimatorController_Enemy
 
     public void AnimEvent_Attack()
     {
-        owner.Attack();
+        evilWizard.Attack();
     }
 }

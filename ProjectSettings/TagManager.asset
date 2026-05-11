@@ -14,8 +14,8 @@ TagManager:
   - Map
   - Player
   - Enemy
-  - 
-  - 
+  - DeathEnemy
+  - DeathPlayer
   - 
   - 
   - 

@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class AnimatorController_Player : AnimatorController
 {
-    [SerializeField] Player player;
+    Player player => base.owner as Player;
 
     Dictionary<AnimKey_Player, int> animDict = new Dictionary<AnimKey_Player, int>();
 

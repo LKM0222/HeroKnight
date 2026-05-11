@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +22,7 @@ public class Player : Unit
     [SerializeField] private float maxMana;
     [SerializeField] private float mana;
     [SerializeField] private float recoveryManaAmount;
+    [SerializeField] bool isDead = false;
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
@@ -31,6 +33,8 @@ public class Player : Unit
     protected override void Start()
     {
         base.Start();
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        isDead = false;
     }
 
     void Update()
@@ -46,7 +50,7 @@ public class Player : Unit
 
     void Move()
     {
-        if (isBlocked) return;
+        if (isBlocked || isDead) return;
         transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
     }
 
@@ -58,16 +62,25 @@ public class Player : Unit
             floatingText.SpawnText(TextType.Nomal, "Defenced");
             return;
         }
-        hp -= atk;
+        hp = Mathf.Clamp(hp - atk, 0f, maxHP);
         floatingText.SpawnText(TextType.Hit, atk.ToString());
-        anim.SetAnim(AnimType_Player.Hurt);
+
+        if (hp > 0f)
+        {
+            anim.SetAnim(AnimType_Player.Hurt);
+        }
+        else
+        {
+            DeathPlayer();
+            anim.SetAnim(AnimType_Player.Death);
+        }
     }
 
     void OnMove(InputValue value)
     {
         inputVec2 = value.Get<Vector2>();
 
-        if (inputVec2 != null)
+        if (inputVec2 != null && !isDead)
         {
             moveDirection = new Vector3(inputVec2.x, 0, inputVec2.y);
 
@@ -77,7 +90,7 @@ public class Player : Unit
 
     void OnJump(InputValue value)
     {
-        if (!isGrounded || isBlocked) return;
+        if (!isGrounded || isBlocked || isDead) return;
 
         rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         isGrounded = false;
@@ -93,7 +106,7 @@ public class Player : Unit
 
     void OnAttack(InputValue value)
     {
-        if (isRoll || isBlocked) return;
+        if (isRoll || isBlocked || isDead) return;
 
         // 공격을 만들건데
         // 공격의 종류에 따라서 공격이 다르게 적용되게 해야되긴해
@@ -120,12 +133,11 @@ public class Player : Unit
         }
 
         anim.SetAnim(AnimType_Player.Attack);
-        GameManager.Instance.SetComboUI();
     }
 
     void OnRoll(InputValue value)
     {
-        if (isRoll || isBlocked) return;
+        if (isRoll || isBlocked || isDead) return;
 
         isRoll = true;
         anim.SetAnim(AnimType_Player.Roll);
@@ -133,7 +145,7 @@ public class Player : Unit
 
     void OnBlock(InputValue value)
     {
-        if (isRoll) return;
+        if (isRoll || isDead) return;
 
         isBlocked = value.isPressed;
         anim.SetBlockAnim(isBlocked);
@@ -169,5 +181,13 @@ public class Player : Unit
     public void RecoveryMana()
     {
         mana = Mathf.Clamp(mana + recoveryManaAmount, 0f, maxMana);
+    }
+
+    private void DeathPlayer()
+    {
+        // GameOver 로직 작성
+        Debug.Log("GameOver");
+        isDead = true;
+        gameObject.layer = LayerMask.NameToLayer("DeathPlayer");
     }
 }

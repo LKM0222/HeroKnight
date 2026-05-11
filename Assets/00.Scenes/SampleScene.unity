@@ -5736,7 +5736,7 @@ MonoBehaviour:
   jumpPower: 0
   atk: 2
   atkRange: 1
-  maxHP: 1000
+  maxHP: 6
   hp: 0
   hpBar: {fileID: 183183917}
   floatingText: {fileID: 2092747887}
@@ -5765,6 +5765,7 @@ MonoBehaviour:
   animator: {fileID: 1570256208}
   sr: {fileID: 1570256206}
   owner: {fileID: 1570256209}
+  deathWaitTime: 3
 --- !u!1 &1572765845
 GameObject:
   m_ObjectHideFlags: 0
@@ -7126,6 +7127,7 @@ MonoBehaviour:
   animator: {fileID: 1947338343}
   sr: {fileID: 1947338346}
   owner: {fileID: 1947338349}
+  deathWaitTime: 3
 --- !u!114 &1947338349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7142,8 +7144,8 @@ MonoBehaviour:
   jumpPower: 0
   atk: 5
   atkRange: 3
-  maxHP: 2000
-  hp: 2000
+  maxHP: 6
+  hp: 0
   hpBar: {fileID: 609866924}
   floatingText: {fileID: 609866923}
   target: {fileID: 0}
@@ -8552,7 +8554,7 @@ MonoBehaviour:
   jumpPower: 7.5
   atk: 2
   atkRange: 1
-  maxHP: 100
+  maxHP: 6
   hp: 0
   hpBar: {fileID: 904964055}
   floatingText: {fileID: 505190379}
@@ -8613,7 +8615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AnimatorController
   animator: {fileID: 2655505059718872568}
   sr: {fileID: 2954181337124479712}
-  player: {fileID: 9117128348242482250}
+  owner: {fileID: 9117128348242482250}
   attackType: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

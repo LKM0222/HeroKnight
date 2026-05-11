@@ -26,6 +26,7 @@ public class Goblin : Enemy
             case EnemyState.Find: ChangeCoroutine(StartCoroutine(FindCoroutine())); break;
             case EnemyState.Chase: ChangeCoroutine(StartCoroutine(ChaseCoroutine())); break;
             case EnemyState.Attack: ChangeCoroutine(StartCoroutine(AttackCoroutine())); break;
+            case EnemyState.Death: ChangeCoroutine(StartCoroutine(DeathCoroutine())); break;
         }
     }
 
