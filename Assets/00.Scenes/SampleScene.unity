@@ -4300,7 +4300,7 @@ GameObject:
   - component: {fileID: 1032563261}
   - component: {fileID: 1032563260}
   m_Layer: 7
-  m_Name: Particle System
+  m_Name: HealParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13804,6 +13804,7 @@ MonoBehaviour:
   rb: {fileID: 8942925490405482602}
   boxCollider: {fileID: 9117128348242482249}
   anim: {fileID: 9117128348242482252}
+  healParticle: {fileID: 1032563261}
   inputVec2: {x: 0, y: 0}
   moveDirection: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -13817,6 +13818,7 @@ MonoBehaviour:
   rushDistance: 10
   rushStep: 0.5
   rushAtkDmg: 50
+  healAmount: 20
   isGrounded: 0
   isRoll: 0
   isBlocked: 0

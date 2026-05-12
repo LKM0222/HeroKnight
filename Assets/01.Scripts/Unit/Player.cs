@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,7 +11,7 @@ public class Player : Unit
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_Player anim;
-
+    [SerializeField] ParticleSystem healParticle;
 
     [Header("Base Data")]
     [SerializeField] Vector2 inputVec2;
@@ -28,6 +29,8 @@ public class Player : Unit
     [SerializeField] float rushDistance;
     [SerializeField] float rushStep = 0.1f;
     [SerializeField] float rushAtkDmg;
+    [SerializeField] float healAmount;
+
 
     [Header("Flag")]
     [SerializeField] bool isGrounded;
@@ -182,6 +185,13 @@ public class Player : Unit
     {
         if (isRush || isRoll || isDead) return;
         anim.SetAnim(AnimType_Player.RushAttack);
+    }
+
+    void OnHeal(InputValue value)
+    {
+        hp = Mathf.Clamp(hp + healAmount, 0f, maxHP);
+        floatingText.SpawnText(TextType.Heal, healAmount.ToString());
+        healParticle.Play();
     }
 
     // Private Method
