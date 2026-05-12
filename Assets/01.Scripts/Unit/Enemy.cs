@@ -16,6 +16,7 @@ public abstract class Enemy : Unit
 
     [Header("Refrence")]
     [SerializeField] CircleCollider2D findRangeCollider;
+    [SerializeField] ParticleSystem hitParticle;
 
     [Header("Time")]
     [SerializeField] protected float waitTime;
@@ -42,6 +43,7 @@ public abstract class Enemy : Unit
         hp -= dmg;
         float hpRatio = hp / maxHP;
         hpBar.SetHPBar(hpRatio);
+        hitParticle.Emit(10);
     }
 
     protected override void Start()
@@ -55,6 +57,8 @@ public abstract class Enemy : Unit
         findRangeCollider.isTrigger = true;
 
         gameObject.layer = LayerMask.NameToLayer("Enemy");
+
+        hitParticle.gameObject.SetActive(true);
     }
 
 

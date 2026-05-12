@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable] public enum AnimType_Player { Idle, Attack, Block, Hurt, Death, Jump, Roll, Run }
-[Serializable] enum AnimKey_Player{AnimState, AttackType, Attack, Block, IdleBlock, Hurt, Death, AirSpeedY, Grounded, Jump, Roll}
+[Serializable] public enum AnimType_Player { Idle, Attack, Block, Hurt, Death, Jump, Roll, Run, RushAttack }
+[Serializable] enum AnimKey_Player{AnimState, AttackType, Attack, Block, IdleBlock, Hurt, Death, AirSpeedY, Grounded, Jump, Roll, InFall, RushAttack}
 
 
 public class AnimatorController_Player : AnimatorController
@@ -23,6 +23,7 @@ public class AnimatorController_Player : AnimatorController
     void Update()
     {
         CheckGrounded(player.AirSpeedY, player.IsGrounded);
+        CheckFalling(player.AirSpeedY, player.IsGrounded);
     }
 
     void InitAnimDict()
@@ -68,6 +69,12 @@ public class AnimatorController_Player : AnimatorController
                     animator.SetTrigger(animDict[AnimKey_Player.Roll]);
                 }
                 break;
+
+            case AnimType_Player.RushAttack:
+                {
+                    animator.SetTrigger(animDict[AnimKey_Player.RushAttack]);
+                }
+                break;
         }
     }
 
@@ -94,9 +101,25 @@ public class AnimatorController_Player : AnimatorController
         animator.SetFloat(animDict[AnimKey_Player.AirSpeedY], airSpeedY);
     }
 
+    public void CheckFalling(float airSpeedY, bool isGrounded, float fallThreshold = -0.05f)
+    {
+        bool inFall = !isGrounded && airSpeedY < fallThreshold;
+        animator.SetBool(animDict[AnimKey_Player.InFall], inFall);
+    }
+
     public void AnimEvent_RollEnd()
     {
         player.IsRoll = false;
+    }
+
+    public void AnimEvent_RushAttack()
+    {
+        player.RushAttackStart();
+    }
+
+    public void AnimEvent_RushAttackEnd()
+    {
+        player.RushAttackEnd();
     }
 
     public int LookingDir()

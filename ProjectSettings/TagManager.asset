@@ -16,8 +16,8 @@ TagManager:
   - Enemy
   - DeathEnemy
   - DeathPlayer
-  - 
-  - 
+  - PlayerJump
+  - Wall
   - 
   - 
   - 

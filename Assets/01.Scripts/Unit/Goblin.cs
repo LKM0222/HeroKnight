@@ -9,7 +9,6 @@ public class Goblin : Enemy
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_Goblin anim;
 
-
     protected override void Start()
     {
         base.Start();

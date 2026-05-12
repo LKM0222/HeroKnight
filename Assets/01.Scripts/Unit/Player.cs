@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,21 +15,36 @@ public class Player : Unit
     [Header("Base Data")]
     [SerializeField] Vector2 inputVec2;
     [SerializeField] Vector3 moveDirection;
-    [SerializeField] bool isGrounded;
-    [SerializeField] bool isRoll;
-    [SerializeField] bool isBlocked;
     [SerializeField] Enemy target;
     [SerializeField] Vector2 attackOffset; // 공격 레이 쏘는 오프셋
     [SerializeField] private float maxMana;
     [SerializeField] private float mana;
     [SerializeField] private float recoveryManaAmount;
+    [SerializeField] int jumpCount = 0;
+    [SerializeField] int maxJumpCount = 2;
+
+    [Header("Skill Data")]
+    [SerializeField] Vector3 rushAttackOffset;
+    [SerializeField] float rushDistance;
+    [SerializeField] float rushStep = 0.1f;
+    [SerializeField] float rushAtkDmg;
+
+    [Header("Flag")]
+    [SerializeField] bool isGrounded;
+    [SerializeField] bool isRoll;
+    [SerializeField] bool isBlocked;
     [SerializeField] bool isDead = false;
+    [SerializeField] bool isRush;
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
     public bool IsRoll { get { return isRoll; } set { isRoll = value; } }
     public float MaxMana => maxMana;
     public float Mana => mana;
+
+
+    Coroutine rushCoroutine = null;
+
 
     protected override void Start()
     {
@@ -50,23 +66,28 @@ public class Player : Unit
 
     void Move()
     {
-        if (isBlocked || isDead) return;
+        if (isBlocked || isDead || isRush) return;
         transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
     }
 
     public void Hit(float atk)
     {
+        if (isRoll) return;
+
         if (isBlocked)
         {
             anim.SetBlcokSuccessAnim();
             floatingText.SpawnText(TextType.Nomal, "Defenced");
             return;
         }
+
         hp = Mathf.Clamp(hp - atk, 0f, maxHP);
         floatingText.SpawnText(TextType.Hit, atk.ToString());
 
         if (hp > 0f)
         {
+            if (isRush) return; // 애니메이션 출력만 막음
+
             anim.SetAnim(AnimType_Player.Hurt);
         }
         else
@@ -90,23 +111,29 @@ public class Player : Unit
 
     void OnJump(InputValue value)
     {
-        if (!isGrounded || isBlocked || isDead) return;
 
-        rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-        isGrounded = false;
-
-        // 점프중엔, IsTrigger 체크해서, 충돌 판정 안받게 -> 나중에 점프중엔 피격 안되는거 아닌가??
-        boxCollider.isTrigger = true;
-
-        if (!isRoll)
+        if (isBlocked || isDead || isRush) return;
+        if (jumpCount < maxJumpCount)
         {
-            anim.SetAnim(AnimType_Player.Jump);
+            jumpCount++;
+
+            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+
+            isGrounded = false;
+
+            // 점프중엔 발판에 안맞게
+            gameObject.layer = LayerMask.NameToLayer("PlayerJump");
+
+            if (!isRoll)
+            {
+                anim.SetAnim(AnimType_Player.Jump);
+            }
         }
     }
 
     void OnAttack(InputValue value)
     {
-        if (isRoll || isBlocked || isDead) return;
+        if (isRoll || isBlocked || isDead || isRush) return;
 
         // 공격을 만들건데
         // 공격의 종류에 따라서 공격이 다르게 적용되게 해야되긴해
@@ -137,7 +164,7 @@ public class Player : Unit
 
     void OnRoll(InputValue value)
     {
-        if (isRoll || isBlocked || isDead) return;
+        if (isRoll || isBlocked || isDead || isRush) return;
 
         isRoll = true;
         anim.SetAnim(AnimType_Player.Roll);
@@ -145,12 +172,17 @@ public class Player : Unit
 
     void OnBlock(InputValue value)
     {
-        if (isRoll || isDead) return;
+        if (isRoll || isDead || isRush) return;
 
         isBlocked = value.isPressed;
         anim.SetBlockAnim(isBlocked);
     }
 
+    void OnRushAttack(InputValue value)
+    {
+        if (isRush || isRoll || isDead) return;
+        anim.SetAnim(AnimType_Player.RushAttack);
+    }
 
     // Private Method
     void CheckGround()
@@ -170,9 +202,11 @@ public class Player : Unit
             {
                 if (hit.distance < boxCollider.bounds.size.y / 2) // Player의 중심에서 Ray를 쏘고 있기 떄문에, 플레이어 높이의 반 보다 작을때 = 땅에 있음
                 {
-                    Debug.Log($"Grounded : {hit.collider.gameObject.name}");
                     isGrounded = true;
-                    boxCollider.isTrigger = false;
+                    isRush = false;
+                    jumpCount = 0;
+
+                    gameObject.layer = LayerMask.NameToLayer("Player");
                 }
             }
         }
@@ -189,5 +223,59 @@ public class Player : Unit
         Debug.Log("GameOver");
         isDead = true;
         gameObject.layer = LayerMask.NameToLayer("DeathPlayer");
+    }
+
+    public void RushAttackStart()
+    {
+        if (rushCoroutine != null)
+            StopCoroutine(rushCoroutine);
+
+        rushCoroutine = StartCoroutine(RushCoroutine());
+    }
+
+    public void RushAttackEnd()
+    {
+        isRush = false;
+    }
+
+    IEnumerator RushCoroutine()
+    {
+        isRush = true;
+
+        int objMask = LayerMask.GetMask("Wall", "Enemy");
+        float dir = anim.LookingDir();
+
+        float moved = 0f; // 이동거리
+
+        while (moved < rushDistance)
+        {
+            float remain = Mathf.Min(rushStep, rushDistance - moved);
+            Vector2 delta = Vector2.right * dir * remain;
+
+            Vector2 rayOrigin = rb.position + new Vector2(rushAttackOffset.x * dir, rushAttackOffset.y);
+            RaycastHit2D obj = Physics2D.Raycast(rayOrigin, delta.normalized, delta.magnitude, objMask);
+            // Debug.DrawRay(new Vector3(rayOrigin.x, rayOrigin.y, transform.position.z), new Vector3(delta.x, delta.y, 0f), Color.red, 0.5f);
+
+            if (obj.collider != null)
+            {
+                Enemy enemy = obj.collider.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemy.Hit(rushAtkDmg);
+                }
+
+                float d = Mathf.Max(0f, obj.distance - 0.02f);
+                rb.MovePosition(rb.position + delta.normalized * d);
+                transform.position = new Vector3(rb.position.x, rb.position.y, transform.position.z);
+                break;
+            }
+
+            rb.MovePosition(rb.position + delta);
+            transform.position = new Vector3(rb.position.x, rb.position.y, transform.position.z);
+            moved += remain;
+            yield return null;
+        }
+
+        rushCoroutine = null;
     }
 }
