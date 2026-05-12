@@ -12,7 +12,9 @@ public abstract class Enemy : Unit
     [SerializeField] protected Vector2 moveDir;
     [SerializeField] protected float findRange;
     [SerializeField] public EnemyType enemyType;
-
+    [SerializeField] float knockbackDistance = 1f;
+    [SerializeField] float knockbackDuration = 0.25f;
+    [SerializeField] bool isKnockback;
 
     [Header("Refrence")]
     [SerializeField] CircleCollider2D findRangeCollider;
@@ -24,6 +26,7 @@ public abstract class Enemy : Unit
     [SerializeField] protected float atkCooltime;
 
     protected Coroutine nowStateCoroutine;
+    Coroutine knockbackCoroutine;
 
     protected Vector2 toTarget => target == null ? Vector2.zero : (Vector2)(target.transform.position - transform.position);
     protected float dist => Mathf.Abs(toTarget.x);
@@ -75,6 +78,7 @@ public abstract class Enemy : Unit
 
     protected virtual void Move()
     {
+        if (isKnockback) return;
         transform.Translate(moveDir * Time.deltaTime * moveSpeed);
     }
 
@@ -128,5 +132,33 @@ public abstract class Enemy : Unit
     protected void SetMoveDir()
     {
         moveDir = dist > 0.0001f ? new Vector2(Mathf.Sign(toTarget.x), 0f) : Vector2.zero;
+    }
+
+    public void EnemyKnockback(Player target)
+    {
+        if (target == null || isKnockback) return;
+        if (knockbackCoroutine != null)
+            StopCoroutine(knockbackCoroutine);
+        knockbackCoroutine = StartCoroutine(KnockbackRoutine(target));
+    }
+
+    IEnumerator KnockbackRoutine(Player attacker)
+    {
+        isKnockback = true;
+        float sign = Mathf.Sign(transform.position.x - attacker.transform.position.x);
+        if (Mathf.Approximately(sign, 0f)) sign = 1f;
+        Vector3 start = transform.position;
+        float elapsed = 0f;
+        while (elapsed < knockbackDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / knockbackDuration);
+            float eased = 1f - (1f - t) * (1f - t);
+            transform.position = start + new Vector3(sign * knockbackDistance * eased, 0f, 0f);
+            yield return null;
+        }
+        transform.position = start + new Vector3(sign * knockbackDistance, 0f, 0f);
+        isKnockback = false;
+        knockbackCoroutine = null;
     }
 }

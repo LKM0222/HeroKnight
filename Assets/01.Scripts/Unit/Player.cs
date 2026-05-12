@@ -12,6 +12,8 @@ public class Player : Unit
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_Player anim;
     [SerializeField] ParticleSystem healParticle;
+    [SerializeField] DownSmashCollider downSmashCollider;
+    [SerializeField] ParticleSystem downSmashParticle;
 
     [Header("Base Data")]
     [SerializeField] Vector2 inputVec2;
@@ -24,12 +26,18 @@ public class Player : Unit
     [SerializeField] int jumpCount = 0;
     [SerializeField] int maxJumpCount = 2;
 
-    [Header("Skill Data")]
+    [Header("Skill Data/Rush")]
     [SerializeField] Vector3 rushAttackOffset;
     [SerializeField] float rushDistance;
     [SerializeField] float rushStep = 0.1f;
     [SerializeField] float rushAtkDmg;
+
+    [Header("Skill Data/Heal")]
     [SerializeField] float healAmount;
+
+    [Header("Skill Data/Down Smash")]
+    [SerializeField] float downSmashAtkDamage;
+    [SerializeField] float downSmashAtkArea;
 
 
     [Header("Flag")]
@@ -38,6 +46,7 @@ public class Player : Unit
     [SerializeField] bool isBlocked;
     [SerializeField] bool isDead = false;
     [SerializeField] bool isRush;
+    [SerializeField] bool isDownSmash;
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
@@ -47,6 +56,7 @@ public class Player : Unit
 
 
     Coroutine rushCoroutine = null;
+    Coroutine downSmashCoroutine = null;
 
 
     protected override void Start()
@@ -54,6 +64,12 @@ public class Player : Unit
         base.Start();
         gameObject.layer = LayerMask.NameToLayer("Player");
         isDead = false;
+        //
+        healParticle.gameObject.SetActive(true);
+
+        //
+        downSmashCollider.Init(this, downSmashAtkArea);
+        downSmashParticle.gameObject.SetActive(true);
     }
 
     void Update()
@@ -69,7 +85,7 @@ public class Player : Unit
 
     void Move()
     {
-        if (isBlocked || isDead || isRush) return;
+        if (isBlocked || isDead || isRush || isDownSmash) return;
         transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
     }
 
@@ -89,7 +105,7 @@ public class Player : Unit
 
         if (hp > 0f)
         {
-            if (isRush) return; // 애니메이션 출력만 막음
+            if (isRush || isDownSmash) return; // 애니메이션 출력만 막음
 
             anim.SetAnim(AnimType_Player.Hurt);
         }
@@ -115,7 +131,7 @@ public class Player : Unit
     void OnJump(InputValue value)
     {
 
-        if (isBlocked || isDead || isRush) return;
+        if (isBlocked || isDead || isRush || isDownSmash) return;
         if (jumpCount < maxJumpCount)
         {
             jumpCount++;
@@ -136,7 +152,7 @@ public class Player : Unit
 
     void OnAttack(InputValue value)
     {
-        if (isRoll || isBlocked || isDead || isRush) return;
+        if (isRoll || isBlocked || isDead || isRush || isDownSmash) return;
 
         // 공격을 만들건데
         // 공격의 종류에 따라서 공격이 다르게 적용되게 해야되긴해
@@ -167,7 +183,7 @@ public class Player : Unit
 
     void OnRoll(InputValue value)
     {
-        if (isRoll || isBlocked || isDead || isRush) return;
+        if (isRoll || isBlocked || isDead || isRush || isDownSmash) return;
 
         isRoll = true;
         anim.SetAnim(AnimType_Player.Roll);
@@ -175,7 +191,7 @@ public class Player : Unit
 
     void OnBlock(InputValue value)
     {
-        if (isRoll || isDead || isRush) return;
+        if (isRoll || isDead || isRush || isDownSmash) return;
 
         isBlocked = value.isPressed;
         anim.SetBlockAnim(isBlocked);
@@ -183,15 +199,27 @@ public class Player : Unit
 
     void OnRushAttack(InputValue value)
     {
-        if (isRush || isRoll || isDead) return;
+        if (isRush || isRoll || isDead || isDownSmash) return;
         anim.SetAnim(AnimType_Player.RushAttack);
     }
 
     void OnHeal(InputValue value)
     {
+        if (isRush || isRoll || isDead || isDownSmash) return;
+
         hp = Mathf.Clamp(hp + healAmount, 0f, maxHP);
         floatingText.SpawnText(TextType.Heal, healAmount.ToString());
         healParticle.Play();
+    }
+
+    void OnDownSmash(InputValue value)
+    {
+        if (isRush || isRoll || isDead || isDownSmash) return;
+
+        if (jumpCount < 2) return; // 점프를 하지 않으면 사용 불가
+
+        anim.SetAnim(AnimType_Player.DownSmash);
+        DownSmash();
     }
 
     // Private Method
@@ -287,5 +315,32 @@ public class Player : Unit
         }
 
         rushCoroutine = null;
+    }
+
+    void DownSmash()
+    {
+        if (downSmashCoroutine != null)
+        {
+            StopCoroutine(downSmashCoroutine);
+        }
+
+        downSmashCoroutine = StartCoroutine(DownSmashCoroutine());
+    }
+
+    IEnumerator DownSmashCoroutine()
+    {
+        isDownSmash = true;
+
+        downSmashCollider.gameObject.SetActive(true);
+
+        yield return new WaitUntil(() => isGrounded.Equals(true));
+
+        downSmashParticle.Emit(20);
+
+        // 콜라이더에 닿은 오브젝트 불러와서 모두 데미지 처리
+        downSmashCollider.EnemyHit(downSmashAtkDamage);
+
+        isDownSmash = false;
+        downSmashCollider.gameObject.SetActive(false);
     }
 }

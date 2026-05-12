@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable] public enum AnimType_Player { Idle, Attack, Block, Hurt, Death, Jump, Roll, Run, RushAttack }
-[Serializable] enum AnimKey_Player{AnimState, AttackType, Attack, Block, IdleBlock, Hurt, Death, AirSpeedY, Grounded, Jump, Roll, InFall, RushAttack}
+[Serializable] public enum AnimType_Player { Idle, Attack, Block, Hurt, Death, Jump, Roll, Run, RushAttack, DownSmash }
+[Serializable] enum AnimKey_Player{AnimState, AttackType, Attack, Block, IdleBlock, Hurt, Death, AirSpeedY, Grounded, Jump, Roll, InFall, RushAttack, DownSmash, DownSmashFinish}
 
 
 public class AnimatorController_Player : AnimatorController
@@ -75,6 +75,12 @@ public class AnimatorController_Player : AnimatorController
                     animator.SetTrigger(animDict[AnimKey_Player.RushAttack]);
                 }
                 break;
+
+            case AnimType_Player.DownSmash:
+                {
+                    animator.SetTrigger(animDict[AnimKey_Player.DownSmash]);
+                }
+                break;
         }
     }
 
@@ -105,6 +111,11 @@ public class AnimatorController_Player : AnimatorController
     {
         bool inFall = !isGrounded && airSpeedY < fallThreshold;
         animator.SetBool(animDict[AnimKey_Player.InFall], inFall);
+    }
+
+    public void SetDownSmashFinishAnim()
+    {
+        animator.SetTrigger(animDict[AnimKey_Player.DownSmashFinish]);
     }
 
     public void AnimEvent_RollEnd()
