@@ -14,6 +14,7 @@ public class Player : Unit
     [SerializeField] ParticleSystem healParticle;
     [SerializeField] DownSmashCollider downSmashCollider;
     [SerializeField] ParticleSystem downSmashParticle;
+    public SkillController skillController;
 
     [Header("Base Data")]
     [SerializeField] Vector2 inputVec2;
@@ -53,6 +54,8 @@ public class Player : Unit
     public bool IsRoll { get { return isRoll; } set { isRoll = value; } }
     public float MaxMana => maxMana;
     public float Mana => mana;
+
+    public string skillResultText(int useResult) => useResult == -1 ? "Cooltime" : "No Enough Mana";
 
 
     Coroutine rushCoroutine = null;
@@ -184,9 +187,13 @@ public class Player : Unit
     void OnRoll(InputValue value)
     {
         if (isRoll || isBlocked || isDead || isRush || isDownSmash) return;
-
-        isRoll = true;
-        anim.SetAnim(AnimType_Player.Roll);
+        int useResult = skillController.UseSkill(SkillType.Roll, ref mana);
+        if (useResult > 0)
+        {
+            isRoll = true;
+            anim.SetAnim(AnimType_Player.Roll);
+        }
+        else floatingText.SpawnText(TextType.Nomal, skillResultText(useResult));
     }
 
     void OnBlock(InputValue value)
@@ -200,26 +207,41 @@ public class Player : Unit
     void OnRushAttack(InputValue value)
     {
         if (isRush || isRoll || isDead || isDownSmash) return;
-        anim.SetAnim(AnimType_Player.RushAttack);
+
+        int useResult = skillController.UseSkill(SkillType.RushAttack, ref mana);
+        if (useResult > 0)
+        {
+            anim.SetAnim(AnimType_Player.RushAttack);
+        }
+        else floatingText.SpawnText(TextType.Nomal, skillResultText(useResult));
     }
 
     void OnHeal(InputValue value)
     {
         if (isRush || isRoll || isDead || isDownSmash) return;
 
-        hp = Mathf.Clamp(hp + healAmount, 0f, maxHP);
-        floatingText.SpawnText(TextType.Heal, healAmount.ToString());
-        healParticle.Play();
+        int useResult = skillController.UseSkill(SkillType.Heal, ref mana);
+        if (useResult > 0)
+        {
+            hp = Mathf.Clamp(hp + healAmount, 0f, maxHP);
+            floatingText.SpawnText(TextType.Heal, healAmount.ToString());
+            healParticle.Play();
+        }
+        else floatingText.SpawnText(TextType.Nomal, skillResultText(useResult));
     }
 
     void OnDownSmash(InputValue value)
     {
         if (isRush || isRoll || isDead || isDownSmash) return;
-
         if (jumpCount < 2) return; // 점프를 하지 않으면 사용 불가
 
-        anim.SetAnim(AnimType_Player.DownSmash);
-        DownSmash();
+        int useResult = skillController.UseSkill(SkillType.DownSmash, ref mana);
+        if (useResult > 0)
+        {
+            anim.SetAnim(AnimType_Player.DownSmash);
+            DownSmash();
+        }
+        else floatingText.SpawnText(TextType.Nomal, skillResultText(useResult));
     }
 
     // Private Method

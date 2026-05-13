@@ -9,7 +9,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     public MainUI mainUI;
 
-
+    protected override void OnAwakeRoutine()
+    {
+        mainUI.Init();
+    }
     
     public void SetComboUI()
     {

@@ -7822,10 +7822,10 @@ RectTransform:
   - {fileID: 1727513537}
   m_Father: {fileID: 1860025968}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 160, y: -53.95}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &872886797
 MonoBehaviour:
@@ -7839,12 +7839,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a57dc234cfcd2a408e551691d0012d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyGuid
+  skillType: 1
   keyType: 97
   keyGuidText: {fileID: 777331935}
   keyIcon: {fileID: 1395269050}
   timerText: {fileID: 1727513538}
   timerImg: {fileID: 1619780877}
-  time: 0
+  info:
+    skillType: 0
+    coolTime: 0
+    time: 0
+    consumeMana: 0
+    canUse: 0
 --- !u!114 &872886798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8260,9 +8266,9 @@ RectTransform:
   - {fileID: 1175755701}
   m_Father: {fileID: 1879496554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 232.33315, y: -52.812878}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 464.6663, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &938259781
@@ -14393,7 +14399,7 @@ RectTransform:
   m_Father: {fileID: 131675532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.555, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15313,7 +15319,7 @@ RectTransform:
   m_Father: {fileID: 1897508289}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.555, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15605,10 +15611,10 @@ RectTransform:
   - {fileID: 1207735176}
   m_Father: {fileID: 1860025968}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -53.95}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1517913959
 MonoBehaviour:
@@ -15660,12 +15666,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a57dc234cfcd2a408e551691d0012d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyGuid
-  keyType: 99
+  skillType: 0
+  keyType: 122
   keyGuidText: {fileID: 675515001}
   keyIcon: {fileID: 395604275}
   timerText: {fileID: 1207735177}
   timerImg: {fileID: 936063339}
-  time: 0
+  info:
+    skillType: 0
+    coolTime: 0
+    time: 0
+    consumeMana: 0
+    canUse: 0
 --- !u!1 &1548778387
 GameObject:
   m_ObjectHideFlags: 0
@@ -16217,7 +16229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1686938576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16505,10 +16517,10 @@ RectTransform:
   - {fileID: 505329199}
   m_Father: {fileID: 1860025968}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 270, y: -53.95}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1815229971
 MonoBehaviour:
@@ -16522,12 +16534,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a57dc234cfcd2a408e551691d0012d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyGuid
+  skillType: 3
   keyType: 115
   keyGuidText: {fileID: 729036642}
   keyIcon: {fileID: 1631385799}
   timerText: {fileID: 505329200}
   timerImg: {fileID: 371070532}
-  time: 0
+  info:
+    skillType: 0
+    coolTime: 0
+    time: 0
+    consumeMana: 0
+    canUse: 0
 --- !u!114 &1815229972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16902,9 +16920,9 @@ RectTransform:
   - {fileID: 26318081}
   m_Father: {fileID: 1879496554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -20.937626}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1917892465
@@ -18032,10 +18050,10 @@ RectTransform:
   - {fileID: 1272742402}
   m_Father: {fileID: 1860025968}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 380, y: -53.95}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2089205909
 MonoBehaviour:
@@ -18049,12 +18067,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a57dc234cfcd2a408e551691d0012d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeyGuid
+  skillType: 2
   keyType: 100
   keyGuidText: {fileID: 1508336576}
   keyIcon: {fileID: 147856150}
   timerText: {fileID: 1272742403}
   timerImg: {fileID: 165299848}
-  time: 0
+  info:
+    skillType: 0
+    coolTime: 0
+    time: 0
+    consumeMana: 0
+    canUse: 0
 --- !u!114 &2089205910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18720,7 +18744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1532373846653146678, guid: 67a5234fc36bc0c45a8affe53ce76282, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1532373846653146678, guid: 67a5234fc36bc0c45a8affe53ce76282, type: 3}
       propertyPath: m_SizeDelta.y
@@ -18859,6 +18883,7 @@ GameObject:
   - component: {fileID: 8413529789459780872}
   - component: {fileID: 9117128348242482250}
   - component: {fileID: 9117128348242482252}
+  - component: {fileID: 9117128348242482253}
   - component: {fileID: 2655505059718872568}
   - component: {fileID: 2954181337124479712}
   - component: {fileID: 8942925490405482602}
@@ -18990,6 +19015,7 @@ MonoBehaviour:
   healParticle: {fileID: 1032563261}
   downSmashCollider: {fileID: 1594304617}
   downSmashParticle: {fileID: 29433562}
+  skillController: {fileID: 9117128348242482253}
   inputVec2: {x: 0, y: 0}
   moveDirection: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
@@ -19058,6 +19084,39 @@ MonoBehaviour:
   sr: {fileID: 2954181337124479712}
   owner: {fileID: 9117128348242482250}
   attackType: 0
+--- !u!114 &9117128348242482253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6323719954191472991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55e81f616f9cd204390502560a6317b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillController
+  skillInfo:
+  - skillType: 0
+    coolTime: 2
+    time: 0
+    consumeMana: 5
+    canUse: 0
+  - skillType: 1
+    coolTime: 5
+    time: 0
+    consumeMana: 5
+    canUse: 0
+  - skillType: 2
+    coolTime: 10
+    time: 0
+    consumeMana: 25
+    canUse: 0
+  - skillType: 3
+    coolTime: 10
+    time: 0
+    consumeMana: 10
+    canUse: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

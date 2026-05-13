@@ -25,15 +25,22 @@ public class MainUI : MonoBehaviour
 
     Coroutine comboCoroutine = null;
 
-    void Start()
+    bool isInit;
+
+    public void Init()
     {
         comboImg.gameObject.SetActive(false);
         comboText.gameObject.SetActive(false);
         comboTitle.gameObject.SetActive(false);
+        //
+        keyGuidList.ForEach(x => x.Init());
+        //
+        isInit = true;
     }
 
     void Update()
     {
+        if (!isInit) return;
         SetHPSlider();
         SetManaSlider();
     }
