@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public enum EnemyType { Goblin, EvilWizard }
 
-public class EnemyPoolManager : MonoBehaviour
+public class EnemyPoolManager : MonoSingleton<EnemyPoolManager>
 {
     [SerializeField] Goblin goblinPrefab;
     [SerializeField] EvilWizard evilWizardPrefab;
@@ -15,14 +15,25 @@ public class EnemyPoolManager : MonoBehaviour
 
     [SerializeField] int initEnemyCount;
 
-    void Start()
+    public bool isInit = false;
+
+    protected override void OnAwakeRoutine()
+    {
+        Init();
+    }
+
+
+    void Init()
     {
         for (int i = 0; i < initEnemyCount; i++)
         {
             goblinPool.Enqueue(Instantiate(goblinPrefab, this.transform));
             evilWizardPool.Enqueue(Instantiate(evilWizardPrefab, this.transform));
         }
+
+        isInit = true;
     }
+
 
     public Enemy Enemy_Dequeue(EnemyType type)
     {

@@ -57,6 +57,7 @@ public class Player : Unit
     public bool IsRoll { get { return isRoll; } set { isRoll = value; } }
     public float MaxMana => maxMana;
     public float Mana => mana;
+    public bool IsGameStart => StageManager.Instance == null ? false : StageManager.Instance.isGameStart;
 
     public string skillResultText(int useResult) => useResult == -1 ? "Cooltime" : "No Enough Mana";
 
@@ -67,15 +68,25 @@ public class Player : Unit
 
     protected override void Start()
     {
+        GaemStart();
+    }
+
+    public void GaemStart()
+    {
         base.Start();
+
         gameObject.layer = LayerMask.NameToLayer("Player");
+        //
         isDead = false;
+        mana = 0;
+    
         //
         healParticle.gameObject.SetActive(true);
-
-        //
         downSmashCollider.Init(this, downSmashAtkArea);
         downSmashParticle.gameObject.SetActive(true);
+
+        //
+        this.transform.position = StageManager.Instance.playerStartPos.position;
     }
 
     void Update()
@@ -91,7 +102,7 @@ public class Player : Unit
 
     void Move()
     {
-        if (isBlocked || isDead || isRush || isDownSmash) return;
+        if (isBlocked || isDead || isRush || isDownSmash || !IsGameStart) return;
         transform.Translate(moveDirection * Time.deltaTime * moveSpeed);
     }
 
@@ -139,7 +150,7 @@ public class Player : Unit
     void OnJump(InputValue value)
     {
 
-        if (isBlocked || isDead || isRush || isDownSmash) return;
+        if (isBlocked || isDead || isRush || isDownSmash || !IsGameStart) return;
         if (jumpCount < maxJumpCount)
         {
             jumpCount++;
@@ -160,7 +171,7 @@ public class Player : Unit
 
     void OnAttack(InputValue value)
     {
-        if (isRoll || isBlocked || isDead || isRush || isDownSmash) return;
+        if (isRoll || isBlocked || isDead || isRush || isDownSmash || !IsGameStart) return;
 
         // 공격을 만들건데
         // 공격의 종류에 따라서 공격이 다르게 적용되게 해야되긴해
@@ -191,7 +202,7 @@ public class Player : Unit
 
     void OnRoll(InputValue value)
     {
-        if (isRoll || isBlocked || isDead || isRush || isDownSmash) return;
+        if (isRoll || isBlocked || isDead || isRush || isDownSmash || !IsGameStart) return;
         int useResult = skillController.UseSkill(SkillType.Roll, ref mana);
         if (useResult > 0)
         {
@@ -203,7 +214,7 @@ public class Player : Unit
 
     void OnBlock(InputValue value)
     {
-        if (isRoll || isDead || isRush || isDownSmash) return;
+        if (isRoll || isDead || isRush || isDownSmash || !IsGameStart) return;
 
         isBlocked = value.isPressed;
         anim.SetBlockAnim(isBlocked);
@@ -211,7 +222,7 @@ public class Player : Unit
 
     void OnRushAttack(InputValue value)
     {
-        if (isRush || isRoll || isDead || isDownSmash) return;
+        if (isRush || isRoll || isDead || isDownSmash || !IsGameStart) return;
 
         int useResult = skillController.UseSkill(SkillType.RushAttack, ref mana);
         if (useResult > 0)
@@ -223,7 +234,7 @@ public class Player : Unit
 
     void OnHeal(InputValue value)
     {
-        if (isRush || isRoll || isDead || isDownSmash) return;
+        if (isRush || isRoll || isDead || isDownSmash || !IsGameStart) return;
 
         int useResult = skillController.UseSkill(SkillType.Heal, ref mana);
         if (useResult > 0)
@@ -237,7 +248,7 @@ public class Player : Unit
 
     void OnDownSmash(InputValue value)
     {
-        if (isRush || isRoll || isDead || isDownSmash) return;
+        if (isRush || isRoll || isDead || isDownSmash || !IsGameStart) return;
         if (jumpCount < 2) return; // 점프를 하지 않으면 사용 불가
 
         int useResult = skillController.UseSkill(SkillType.DownSmash, ref mana);
@@ -279,6 +290,7 @@ public class Player : Unit
 
     public void RecoveryMana()
     {
+        if (!IsGameStart) return;
         mana = Mathf.Clamp(mana + recoveryManaAmount, 0f, maxMana);
     }
 
@@ -286,6 +298,7 @@ public class Player : Unit
     {
         // GameOver 로직 작성
         Debug.Log("GameOver");
+        GameManager.Instance.mainUI.GameOverUI();
         isDead = true;
         gameObject.layer = LayerMask.NameToLayer("DeathPlayer");
     }

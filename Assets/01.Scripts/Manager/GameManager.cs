@@ -5,7 +5,11 @@ public class GameManager : MonoSingleton<GameManager>
     public Player player;
 
     public int combo;
-    public int maxCombo;
+    public int maxCombo
+    {
+        get { return PlayerPrefs.GetInt("MaxCombo", 0); }
+        set { combo = value; PlayerPrefs.SetInt("MaxCombo", value); }
+    }
 
     public MainUI mainUI;
 

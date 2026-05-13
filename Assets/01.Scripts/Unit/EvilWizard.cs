@@ -154,6 +154,7 @@ public class EvilWizard : Enemy
 
     protected override IEnumerator DeathCoroutine()
     {
+        yield return base.DeathCoroutine();
         yield return null;
         anim.SetAnim(AnimKey_EvilWizard.Death);
     }

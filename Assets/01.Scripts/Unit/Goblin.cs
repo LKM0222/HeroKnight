@@ -143,6 +143,7 @@ public class Goblin : Enemy
 
     protected override IEnumerator DeathCoroutine()
     {
+        yield return base.DeathCoroutine();
         yield return null;
         anim.SetAnim(AnimType_Goblin.Death);
     }

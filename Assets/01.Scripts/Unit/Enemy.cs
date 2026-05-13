@@ -39,7 +39,7 @@ public abstract class Enemy : Unit
     protected virtual IEnumerator FindCoroutine() { yield return null; }
     protected virtual IEnumerator ChaseCoroutine() { yield return null; }
     protected virtual IEnumerator AttackCoroutine() { yield return null; }
-    protected virtual IEnumerator DeathCoroutine() { yield return null; }
+    protected virtual IEnumerator DeathCoroutine() { yield return null; StageManager.Instance.EnemyDead(this); }
 
     public virtual void Hit(float dmg) // 이건 외부에서 공격할 때 호출해야되니깐 public으로 설정
     {

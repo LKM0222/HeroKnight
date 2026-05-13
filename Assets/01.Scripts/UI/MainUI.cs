@@ -23,6 +23,14 @@ public class MainUI : MonoBehaviour
     [SerializeField] float uiVanishTime;
     [SerializeField] float time;
 
+    [Header("Remain Enemy")]
+    [SerializeField] TMP_Text remainEnemyText;
+
+    [Header("Intro")]
+    [SerializeField] GameObject introUI;
+    [SerializeField] TMP_Text highComboText;
+    [SerializeField] TMP_Text highStageText;
+
     Coroutine comboCoroutine = null;
 
     bool isInit;
@@ -43,6 +51,8 @@ public class MainUI : MonoBehaviour
         if (!isInit) return;
         SetHPSlider();
         SetManaSlider();
+        SetRemainEnemyText();
+        SetIntroUI();
     }
 
     void SetHPSlider()
@@ -61,6 +71,18 @@ public class MainUI : MonoBehaviour
         mpText.text = $"{GameManager.Instance.player.Mana:0}/{GameManager.Instance.player.MaxMana:0}";
     }
 
+    void SetRemainEnemyText()
+    {
+        if (StageManager.Instance == null) return;
+        remainEnemyText.text = $"X {StageManager.Instance.RemainEnemyCount}";
+    }
+
+    void SetIntroUI()
+    {
+        highComboText.text = $"High Combo:{PlayerPrefs.GetInt("MaxCombo", 0)}";
+        highStageText.text = $"High Stage:{PlayerPrefs.GetInt("MaxStage", 0)}";
+    }
+
     public void SetComboUI()
     {
         if (comboCoroutine != null) // 아직 코루틴이 실행중임 -> 기존 코루틴 반복
@@ -73,8 +95,13 @@ public class MainUI : MonoBehaviour
             GameManager.Instance.combo = 1;
             comboCoroutine = StartCoroutine(ComboCoroutine());
         }
-        
+
         comboText.text = GameManager.Instance.combo.ToString();
+    }
+
+    public void GameOverUI()
+    {
+        introUI.SetActive(true);
     }
 
     IEnumerator ComboCoroutine()
@@ -123,5 +150,19 @@ public class MainUI : MonoBehaviour
         comboText.gameObject.SetActive(false);
         comboTitle.gameObject.SetActive(false);
         comboCoroutine = null;
+    }
+
+
+    public void OnClick_GameStart()
+    {
+        introUI.SetActive(false);
+        StageManager.Instance.GaemStart();
+        GameManager.Instance.player.GaemStart();
+    }
+
+    public void OnClick_GameReset()
+    {
+        PlayerPrefs.SetInt("MaxCombo", 0);
+        PlayerPrefs.SetInt("MaxStage", 0);
     }
 }
