@@ -31,15 +31,31 @@ public class MainUI : MonoBehaviour
     [SerializeField] TMP_Text highComboText;
     [SerializeField] TMP_Text highStageText;
 
+    [Header("Stage UI")]
+    [SerializeField] GameObject stageUI;
+    [SerializeField] TMP_Text popupStageText;
+    [SerializeField] TMP_Text uiStageText;
+
+    [Header("Finish UI")]
+    [SerializeField] GameObject finishUI;
+    [SerializeField] TMP_Text finishText;
+    [SerializeField] TMP_Text finish_HighComboText;
+    [SerializeField] TMP_Text finsih_HighStageText;
+
     Coroutine comboCoroutine = null;
+    Coroutine finishTextCoroutine = null;
 
     bool isInit;
 
     public void Init()
     {
+        introUI.SetActive(true);
+        //
         comboImg.gameObject.SetActive(false);
         comboText.gameObject.SetActive(false);
         comboTitle.gameObject.SetActive(false);
+        uiStageText.gameObject.SetActive(false);
+        stageUI.SetActive(false);
         //
         keyGuidList.ForEach(x => x.Init());
         //
@@ -53,6 +69,8 @@ public class MainUI : MonoBehaviour
         SetManaSlider();
         SetRemainEnemyText();
         SetIntroUI();
+        SetStageInfoText();
+        SetFinishUI();
     }
 
     void SetHPSlider()
@@ -77,10 +95,23 @@ public class MainUI : MonoBehaviour
         remainEnemyText.text = $"X {StageManager.Instance.RemainEnemyCount}";
     }
 
+    void SetStageInfoText()
+    {
+        if (StageManager.Instance == null) return;
+        uiStageText.text = $"Stage {StageManager.Instance.GetNowStage}";
+        uiStageText.gameObject.SetActive(StageManager.Instance.isGameStart);
+    }
+
     void SetIntroUI()
     {
         highComboText.text = $"High Combo:{PlayerPrefs.GetInt("MaxCombo", 0)}";
         highStageText.text = $"High Stage:{PlayerPrefs.GetInt("MaxStage", 0)}";
+    }
+
+    void SetFinishUI()
+    {
+        finish_HighComboText.text = $"High Combo:{PlayerPrefs.GetInt("MaxCombo", 0)}";
+        finsih_HighStageText.text = $"High Stage:{PlayerPrefs.GetInt("MaxStage", 0)}";
     }
 
     public void SetComboUI()
@@ -102,6 +133,22 @@ public class MainUI : MonoBehaviour
     public void GameOverUI()
     {
         introUI.SetActive(true);
+    }
+
+    public void GameFinishUI()
+    {
+        finishUI.SetActive(true);
+        if (finishTextCoroutine != null)
+        {
+            StopCoroutine(finishTextCoroutine);
+        }
+        finishTextCoroutine = StartCoroutine(FinishTextCoroutine());
+    }
+
+    public void StageStartUI(bool isStart, int stage, int enemyCount)
+    {
+        stageUI.SetActive(isStart);
+        popupStageText.text = $"Stage {stage}\nEnemy:{enemyCount}";
     }
 
     IEnumerator ComboCoroutine()
@@ -152,10 +199,93 @@ public class MainUI : MonoBehaviour
         comboCoroutine = null;
     }
 
+    IEnumerator FinishTextCoroutine()
+    {
+        const float segmentDuration = 0.6f;
+
+        if (finishText == null)
+            yield break;
+
+        float r = 1f, g = 0f, b = 0f;
+
+        float a = finishText.color.a;
+        
+        while (finishText != null && finishText.gameObject.activeInHierarchy)
+        {
+            float t;
+
+            t = 0f;
+            while (t < segmentDuration)
+            {
+                t += Time.deltaTime;
+                g = Mathf.Lerp(0f, 1f, Mathf.Clamp01(t / segmentDuration));
+                finishText.color = new Color(r, g, b, a);
+                yield return null;
+            }
+            g = 1f;
+
+            t = 0f;
+            while (t < segmentDuration)
+            {
+                t += Time.deltaTime;
+                r = Mathf.Lerp(1f, 0f, Mathf.Clamp01(t / segmentDuration));
+                finishText.color = new Color(r, g, b, a);
+                yield return null;
+            }
+            r = 0f;
+
+            t = 0f;
+            while (t < segmentDuration)
+            {
+                t += Time.deltaTime;
+                b = Mathf.Lerp(0f, 1f, Mathf.Clamp01(t / segmentDuration));
+                finishText.color = new Color(r, g, b, a);
+                yield return null;
+            }
+            b = 1f;
+
+            t = 0f;
+            while (t < segmentDuration)
+            {
+                t += Time.deltaTime;
+                g = Mathf.Lerp(1f, 0f, Mathf.Clamp01(t / segmentDuration));
+                finishText.color = new Color(r, g, b, a);
+                yield return null;
+            }
+            g = 0f;
+
+            t = 0f;
+            while (t < segmentDuration)
+            {
+                t += Time.deltaTime;
+                r = Mathf.Lerp(0f, 1f, Mathf.Clamp01(t / segmentDuration));
+                finishText.color = new Color(r, g, b, a);
+                yield return null;
+            }
+            r = 1f;
+
+            t = 0f;
+            while (t < segmentDuration)
+            {
+                t += Time.deltaTime;
+                b = Mathf.Lerp(1f, 0f, Mathf.Clamp01(t / segmentDuration));
+                finishText.color = new Color(r, g, b, a);
+                yield return null;
+            }
+            b = 0f;
+        }
+        finishTextCoroutine = null;
+    }
 
     public void OnClick_GameStart()
     {
         introUI.SetActive(false);
+        finishUI.SetActive(false);
+        if (finishTextCoroutine != null)
+        {
+            StopCoroutine(finishTextCoroutine);
+            finishTextCoroutine = null;
+        }
         StageManager.Instance.GaemStart();
         GameManager.Instance.player.GaemStart();
     }
@@ -165,4 +295,5 @@ public class MainUI : MonoBehaviour
         PlayerPrefs.SetInt("MaxCombo", 0);
         PlayerPrefs.SetInt("MaxStage", 0);
     }
+
 }

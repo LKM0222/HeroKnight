@@ -11,7 +11,7 @@ public class KeyGuid : MonoBehaviour // 나중에 스킬을 연동시킬 수 있
     [SerializeField] SkillType skillType;
     [SerializeField] KeyCode keyType;
     [SerializeField] TMP_Text keyGuidText;
-    [SerializeField] Image keyIcon;
+    [SerializeField] TMP_Text manaText;
 
     [Header("Timer")]
     [SerializeField] TMP_Text timerText;
@@ -33,6 +33,7 @@ public class KeyGuid : MonoBehaviour // 나중에 스킬을 연동시킬 수 있
         this.info = GameManager.Instance.player.skillController.FindSkill(skillType);
 
         keyGuidText.text = keyType.ToString().ToLower();
+        manaText.text = info.consumeMana.ToString();
         //
         isInit = true;
     }

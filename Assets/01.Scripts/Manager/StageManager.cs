@@ -29,7 +29,8 @@ public class StageManager : MonoSingleton<StageManager>
     [SerializeField] List<Transform> spawnPosList = new List<Transform>();
     public Transform playerStartPos;
 
-    [SerializeField] int nowStage = 0;
+    private int nowStage = 0;
+    public int GetNowStage => nowStage + 1;
 
     Coroutine stageCoroutine = null;
 
@@ -64,8 +65,6 @@ public class StageManager : MonoSingleton<StageManager>
 
     IEnumerator StageCoroutine()
     {
-        // 게임 시작 대기 (시작버튼 대기)
-
         yield return new WaitUntil(() => EnemyPoolManager.Instance != null && EnemyPoolManager.Instance.isInit);
 
         // 기존에 있던 Enemy 초기화
@@ -75,13 +74,15 @@ public class StageManager : MonoSingleton<StageManager>
         // 스테이지 진행 시작
         while (nowStage < stageInfoList.Count)
         {
-            // 스타트 UI 출력, 출력 후 N초 대기
-
-            isGameStart = true;
-
             //Enemy 소환 / enemy 전부 처리될때까지 대기 / 다음 enemy 소환
             stageInfoList[nowStage].spawnPosList.ForEach(x => SpawnEnemy(x));
 
+            // 스타트 UI 출력, 출력 후 N초 대기
+            GameManager.Instance.mainUI.StageStartUI(true, GetNowStage, RemainEnemyCount);
+            yield return new WaitForSeconds(2f);
+            GameManager.Instance.mainUI.StageStartUI(false, GetNowStage, RemainEnemyCount);
+
+            isGameStart = true;
             yield return new WaitUntil(() => RemainEnemyCount <= 0);
             nowStage++;
             isGameStart = false;
