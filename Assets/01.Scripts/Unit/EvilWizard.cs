@@ -10,6 +10,7 @@ public class EvilWizard : Enemy
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_EvilWizard anim;
+    Vector2 findRangeOffsetBase => findRangeCollider.offset;
 
     [SerializeField] Projectile projectilePrefab;
     [SerializeField] List<Projectile> projectileList = new List<Projectile>();
@@ -179,6 +180,11 @@ public class EvilWizard : Enemy
     {
         base.Move();
         anim.SetRunAnim(moveDir.x);
+        float dir = anim.LookingDir();
+        findRangeCollider.offset = new Vector2(
+            Mathf.Abs(findRangeOffsetBase.x) * dir,
+            findRangeOffsetBase.y
+        );
     }
 
     void SpawnProjectile()

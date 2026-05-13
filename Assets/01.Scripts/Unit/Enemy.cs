@@ -17,7 +17,8 @@ public abstract class Enemy : Unit
     [SerializeField] bool isKnockback;
 
     [Header("Refrence")]
-    [SerializeField] CircleCollider2D findRangeCollider;
+    [SerializeField] protected BoxCollider2D findRangeCollider;
+    [SerializeField] BoxCollider2D objectCollider;
     [SerializeField] ParticleSystem hitParticle;
 
     [Header("Time")]
@@ -56,7 +57,11 @@ public abstract class Enemy : Unit
         float hpRatio = hp / maxHP;
         hpBar.SetHPBar(hpRatio);
 
-        findRangeCollider.radius = findRange;
+        findRangeCollider.size = new Vector2(findRange, objectCollider.size.y * 2f);
+        findRangeCollider.offset = new Vector2(
+            findRange * 0.5f,
+            objectCollider.offset.y + objectCollider.size.y * 0.5f
+        );
         findRangeCollider.isTrigger = true;
 
         gameObject.layer = LayerMask.NameToLayer("Enemy");

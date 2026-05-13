@@ -108,7 +108,7 @@ public class Player : Unit
 
     public void Hit(float atk)
     {
-        if (isRoll) return;
+        if (isRoll || !IsGameStart) return;
 
         if (isBlocked)
         {

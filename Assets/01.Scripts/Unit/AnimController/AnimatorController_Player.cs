@@ -132,9 +132,4 @@ public class AnimatorController_Player : AnimatorController
     {
         player.RushAttackEnd();
     }
-
-    public int LookingDir()
-    {
-        return sr.flipX ? -1 : 1;
-    }
 }

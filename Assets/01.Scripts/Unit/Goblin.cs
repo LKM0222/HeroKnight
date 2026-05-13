@@ -8,6 +8,7 @@ public class Goblin : Enemy
     [SerializeField] Rigidbody2D rb;
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] AnimatorController_Goblin anim;
+    Vector2 findRangeOffsetBase => findRangeCollider.offset;
 
     protected override void Start()
     {
