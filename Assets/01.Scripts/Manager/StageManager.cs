@@ -29,7 +29,7 @@ public class StageManager : MonoSingleton<StageManager>
     [SerializeField] List<Transform> spawnPosList = new List<Transform>();
     public Transform playerStartPos;
 
-    private int nowStage = 0;
+    [SerializeField] private int nowStage = 0;
     public int GetNowStage => nowStage + 1;
 
     Coroutine stageCoroutine = null;
@@ -70,7 +70,10 @@ public class StageManager : MonoSingleton<StageManager>
         // 기존에 있던 Enemy 초기화
         remainEnemyList.ForEach(x => EnemyPoolManager.Instance.Enemy_Enqueue(x));
         remainEnemyList.Clear();
-        
+
+        // 스테이지 진행도 0으로 초기화
+        nowStage = 0;
+
         // 스테이지 진행 시작
         while (nowStage < stageInfoList.Count)
         {

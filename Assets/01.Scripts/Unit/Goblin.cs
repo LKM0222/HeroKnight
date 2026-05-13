@@ -162,6 +162,7 @@ public class Goblin : Enemy
     public override void Attack()
     {
         base.Attack();
+        SoundManager.Instance.PlaySound(SoundType.GoblinAttack);
     }
 
     protected override void Move()

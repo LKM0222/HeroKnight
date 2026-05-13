@@ -40,7 +40,7 @@ public abstract class Enemy : Unit
     protected virtual IEnumerator FindCoroutine() { yield return null; }
     protected virtual IEnumerator ChaseCoroutine() { yield return null; }
     protected virtual IEnumerator AttackCoroutine() { yield return null; }
-    protected virtual IEnumerator DeathCoroutine() { yield return null; StageManager.Instance.EnemyDead(this); }
+    protected virtual IEnumerator DeathCoroutine() { yield return null; StageManager.Instance.EnemyDead(this); SoundManager.Instance.PlaySound(SoundType.Death); }
 
     public virtual void Hit(float dmg) // 이건 외부에서 공격할 때 호출해야되니깐 public으로 설정
     {
@@ -48,6 +48,7 @@ public abstract class Enemy : Unit
         hpBar.SetHPBar(hp, maxHP);
         hitParticle.Emit(10);
         GameManager.Instance.SetComboUI();
+        SoundManager.Instance.PlaySound(SoundType.Hit);
     }
 
     protected override void Start()
@@ -147,11 +148,32 @@ public abstract class Enemy : Unit
         knockbackCoroutine = StartCoroutine(KnockbackRoutine(target));
     }
 
+    // IEnumerator KnockbackRoutine(Player attacker)
+    // {
+    //     isKnockback = true;
+    //     float sign = Mathf.Sign(transform.position.x - attacker.transform.position.x);
+    //     if (Mathf.Approximately(sign, 0f)) sign = 1f;
+    //     Vector3 start = transform.position;
+    //     float elapsed = 0f;
+    //     while (elapsed < knockbackDuration)
+    //     {
+    //         elapsed += Time.deltaTime;
+    //         float t = Mathf.Clamp01(elapsed / knockbackDuration);
+    //         float eased = 1f - (1f - t) * (1f - t);
+    //         transform.position = start + new Vector3(sign * knockbackDistance * eased, 0f, 0f);
+    //         yield return null;
+    //     }
+    //     transform.position = start + new Vector3(sign * knockbackDistance, 0f, 0f);
+    //     isKnockback = false;
+    //     knockbackCoroutine = null;
+    // }
     IEnumerator KnockbackRoutine(Player attacker)
     {
         isKnockback = true;
         float sign = Mathf.Sign(transform.position.x - attacker.transform.position.x);
         if (Mathf.Approximately(sign, 0f)) sign = 1f;
+        int wallMask = LayerMask.GetMask("Wall");
+        const float skin = 0.02f;
         Vector3 start = transform.position;
         float elapsed = 0f;
         while (elapsed < knockbackDuration)
@@ -159,10 +181,55 @@ public abstract class Enemy : Unit
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / knockbackDuration);
             float eased = 1f - (1f - t) * (1f - t);
-            transform.position = start + new Vector3(sign * knockbackDistance * eased, 0f, 0f);
+            Vector3 desired = start + new Vector3(sign * knockbackDistance * eased, 0f, 0f);
+            float moveX = desired.x - transform.position.x;
+            float dist = Mathf.Abs(moveX);
+            if (dist > 1e-5f)
+            {
+                Vector2 dir = new Vector2(Mathf.Sign(moveX), 0f);
+                Vector2 size = objectCollider.bounds.size;
+                float angle = objectCollider.transform.eulerAngles.z;
+                RaycastHit2D hit = Physics2D.BoxCast(
+                    objectCollider.bounds.center,
+                    size,
+                    angle,
+                    dir,
+                    dist,
+                    wallMask);
+                if (hit.collider != null)
+                {
+                    float allowed = Mathf.Max(0f, hit.distance - skin);
+                    transform.position += new Vector3(dir.x * allowed, 0f, 0f);
+                    break;
+                }
+            }
+            transform.position = desired;
             yield return null;
         }
-        transform.position = start + new Vector3(sign * knockbackDistance, 0f, 0f);
+        // 루프에서 break 없이 끝났을 때만 최종 목표 한 번 더(이미 desired와 같을 수 있음)
+        {
+            Vector3 desired = start + new Vector3(sign * knockbackDistance, 0f, 0f);
+            float moveX = desired.x - transform.position.x;
+            float dist = Mathf.Abs(moveX);
+            if (dist > 1e-5f)
+            {
+                Vector2 dir = new Vector2(Mathf.Sign(moveX), 0f);
+                RaycastHit2D hit = Physics2D.BoxCast(
+                    objectCollider.bounds.center,
+                    objectCollider.bounds.size,
+                    objectCollider.transform.eulerAngles.z,
+                    dir,
+                    dist,
+                    wallMask);
+                if (hit.collider != null)
+                {
+                    float allowed = Mathf.Max(0f, hit.distance - skin);
+                    transform.position += new Vector3(dir.x * allowed, 0f, 0f);
+                }
+                else
+                    transform.position = desired;
+            }
+        }
         isKnockback = false;
         knockbackCoroutine = null;
     }

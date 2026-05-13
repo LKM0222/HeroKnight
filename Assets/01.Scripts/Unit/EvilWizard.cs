@@ -174,6 +174,7 @@ public class EvilWizard : Enemy
     {
         // base.Attack();
         SpawnProjectile();
+        SoundManager.Instance.PlaySound(SoundType.WizardArrack);
     }
 
     protected override void Move()

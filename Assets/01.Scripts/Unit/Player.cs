@@ -114,6 +114,7 @@ public class Player : Unit
         {
             anim.SetBlcokSuccessAnim();
             floatingText.SpawnText(TextType.Nomal, "Defenced");
+            SoundManager.Instance.PlaySound(SoundType.Block);
             return;
         }
 
@@ -125,11 +126,13 @@ public class Player : Unit
             if (isRush || isDownSmash) return; // 애니메이션 출력만 막음
 
             anim.SetAnim(AnimType_Player.Hurt);
+            SoundManager.Instance.PlaySound(SoundType.Hit);
         }
         else
         {
             DeathPlayer();
             anim.SetAnim(AnimType_Player.Death);
+            SoundManager.Instance.PlaySound(SoundType.Death);
         }
 
         CamImpulse(atk);
@@ -199,6 +202,7 @@ public class Player : Unit
         }
 
         anim.SetAnim(AnimType_Player.Attack);
+        SoundManager.Instance.PlaySound(SoundType.Attack);
     }
 
     void OnRoll(InputValue value)
@@ -229,6 +233,7 @@ public class Player : Unit
         if (useResult > 0)
         {
             anim.SetAnim(AnimType_Player.RushAttack);
+            SoundManager.Instance.PlaySound(SoundType.RushAttack);
         }
         else floatingText.SpawnText(TextType.Nomal, skillResultText(useResult));
     }
@@ -243,6 +248,7 @@ public class Player : Unit
             hp = Mathf.Clamp(hp + healAmount, 0f, maxHP);
             floatingText.SpawnText(TextType.Heal, healAmount.ToString());
             healParticle.Play();
+            SoundManager.Instance.PlaySound(SoundType.Heal);
         }
         else floatingText.SpawnText(TextType.Nomal, skillResultText(useResult));
     }
@@ -378,6 +384,7 @@ public class Player : Unit
         yield return new WaitUntil(() => isGrounded.Equals(true));
 
         downSmashParticle.Emit(20);
+        SoundManager.Instance.PlaySound(SoundType.DownSmash);
 
         // 콜라이더에 닿은 오브젝트 불러와서 모두 데미지 처리
         downSmashCollider.EnemyHit(downSmashAtkDamage);
