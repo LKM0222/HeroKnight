@@ -38,6 +38,7 @@ public class DownSmashCollider : MonoBehaviour
             enemy.Hit(damage);
         }
 
+        GameManager.Instance.player.CamImpulse(damage);
         enemyList.Clear();
     }
 }

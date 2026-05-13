@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Cinemachine;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -40,7 +41,6 @@ public class Player : Unit
     [SerializeField] float downSmashAtkDamage;
     [SerializeField] float downSmashAtkArea;
 
-
     [Header("Flag")]
     [SerializeField] bool isGrounded;
     [SerializeField] bool isRoll;
@@ -48,6 +48,9 @@ public class Player : Unit
     [SerializeField] bool isDead = false;
     [SerializeField] bool isRush;
     [SerializeField] bool isDownSmash;
+
+    [Header("Cam")]
+    [SerializeField] CinemachineImpulseSource impulseSource;
 
     public bool IsGrounded => isGrounded;
     public float AirSpeedY => rb.linearVelocityY;
@@ -117,6 +120,8 @@ public class Player : Unit
             DeathPlayer();
             anim.SetAnim(AnimType_Player.Death);
         }
+
+        CamImpulse(atk);
     }
 
     void OnMove(InputValue value)
@@ -322,6 +327,7 @@ public class Player : Unit
                 if (enemy != null)
                 {
                     enemy.Hit(rushAtkDmg);
+                    CamImpulse(rushAtkDmg);
                 }
 
                 float d = Mathf.Max(0f, obj.distance - 0.02f);
@@ -364,5 +370,11 @@ public class Player : Unit
 
         isDownSmash = false;
         downSmashCollider.gameObject.SetActive(false);
+    }
+
+    public void CamImpulse(float force = 0)
+    {
+        force = Mathf.Clamp(force * 0.05f, 0.25f, 2f); // 숫자는 튜닝
+        impulseSource.GenerateImpulse(force);
     }
 }
