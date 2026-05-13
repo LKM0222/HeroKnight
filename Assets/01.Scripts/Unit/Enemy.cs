@@ -93,7 +93,7 @@ public abstract class Enemy : Unit
         target.Hit(atk);
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.layer.Equals(7))
         {
@@ -102,12 +102,13 @@ public abstract class Enemy : Unit
             {
                 target = player;
             }
+            Debug.Log("Player");
         }
     }
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer.Equals(7))
+        if (collision.gameObject.layer.Equals(7) || collision.gameObject.layer.Equals(11) || collision.gameObject.layer.Equals(10))
         {
             var player = collision.GetComponent<Player>();
             if (target == player)
