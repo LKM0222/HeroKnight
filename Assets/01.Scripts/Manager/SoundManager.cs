@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable] public enum SoundType{ Attack, Heal, ButtonClick, DownSmash, Hit, Death, WizardArrack, GoblinAttack, RushAttack, BGM, Block }
+[Serializable] public enum SoundType{ Attack, Heal, ButtonClick, DownSmash, Hit, Death, WizardArrack, GoblinAttack, RushAttack, BGM, Block, Jump }
 
 [Serializable]
 public class ClipInfo
@@ -39,6 +39,7 @@ public class SoundManager : MonoSingleton<SoundManager>
             case SoundType.GoblinAttack:
             case SoundType.RushAttack:
             case SoundType.Block:
+            case SoundType.Jump:
                 {
                     clipList.Find(x => x.type.Equals(type)).source.Play();
                 }

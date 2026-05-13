@@ -165,6 +165,8 @@ public class Player : Unit
             // 점프중엔 발판에 안맞게
             gameObject.layer = LayerMask.NameToLayer("PlayerJump");
 
+            SoundManager.Instance.PlaySound(SoundType.Jump);
+            
             if (!isRoll)
             {
                 anim.SetAnim(AnimType_Player.Jump);
