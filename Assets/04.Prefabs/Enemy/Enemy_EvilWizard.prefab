@@ -208,9 +208,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EvilWizard
   moveSpeed: 1
   jumpPower: 0
-  atk: 5
-  atkRange: 3
-  maxHP: 6
+  atk: 15
+  atkRange: 5
+  maxHP: 50
   hp: 0
   hpBar: {fileID: 4368476625150215183}
   floatingText: {fileID: 799056878412051090}
@@ -226,7 +226,7 @@ MonoBehaviour:
   hitParticle: {fileID: 8910159048296653404}
   waitTime: 0
   findTime: 3
-  atkCooltime: 2
+  atkCooltime: 1.5
   rb: {fileID: 5604735120268818160}
   boxCollider: {fileID: 2737162453097427953}
   anim: {fileID: 6375503361046464621}

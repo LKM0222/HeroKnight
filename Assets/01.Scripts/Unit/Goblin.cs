@@ -168,5 +168,10 @@ public class Goblin : Enemy
     {
         base.Move();
         anim.SetRunAnim(moveDir.x);
+        float dir = anim.LookingDir();
+        findRangeCollider.offset = new Vector2(
+            Mathf.Abs(findRangeOffsetBase.x) * dir,
+            findRangeOffsetBase.y
+        );
     }
 }

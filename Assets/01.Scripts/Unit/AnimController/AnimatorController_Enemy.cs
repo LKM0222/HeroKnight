@@ -9,7 +9,6 @@ public class AnimatorController_Enemy : AnimatorController
     protected IEnumerator DeathCoroutine()
     {
         owner.gameObject.layer = LayerMask.NameToLayer("DeathEnemy");
-        GameManager.Instance.SetComboUI();
 
         yield return new WaitForSeconds(deathWaitTime);
 

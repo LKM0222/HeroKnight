@@ -192,7 +192,8 @@ public class Player : Unit
 
         if (target != null)
         {
-            target.Hit(atk);
+            int atkValue = (int)UnityEngine.Random.Range(atk, maxAtk);
+            target.Hit(atkValue);
             Debug.Log($"Hit {target.name}");
             target = null;
         }

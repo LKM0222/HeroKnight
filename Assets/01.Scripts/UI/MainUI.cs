@@ -196,6 +196,11 @@ public class MainUI : MonoBehaviour
         comboImg.gameObject.SetActive(false);
         comboText.gameObject.SetActive(false);
         comboTitle.gameObject.SetActive(false);
+        
+        // maxCombo 셋팅
+        int current = GameManager.Instance.combo;
+        GameManager.Instance.maxCombo = current;
+
         comboCoroutine = null;
     }
 

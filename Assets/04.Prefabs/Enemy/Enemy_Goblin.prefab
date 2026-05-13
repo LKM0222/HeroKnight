@@ -286,9 +286,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Goblin
   moveSpeed: 2
   jumpPower: 0
-  atk: 2
+  maxAtk: 0
+  atk: 5
   atkRange: 1
-  maxHP: 6
+  maxHP: 100
   hp: 0
   hpBar: {fileID: 6191851501912100877}
   floatingText: {fileID: 7090006692133906064}
@@ -304,7 +305,7 @@ MonoBehaviour:
   hitParticle: {fileID: 1366964297623182030}
   waitTime: 0
   findTime: 2
-  atkCooltime: 1
+  atkCooltime: 0.5
   rb: {fileID: 5299361909256772390}
   boxCollider: {fileID: 3149033390124439383}
   anim: {fileID: 1857541936855217220}

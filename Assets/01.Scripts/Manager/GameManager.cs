@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
@@ -7,8 +8,13 @@ public class GameManager : MonoSingleton<GameManager>
     public int combo;
     public int maxCombo
     {
-        get { return PlayerPrefs.GetInt("MaxCombo", 0); }
-        set { combo = value; PlayerPrefs.SetInt("MaxCombo", value); }
+        get => PlayerPrefs.GetInt("MaxCombo", 0);
+        set
+        {
+            int prev = PlayerPrefs.GetInt("MaxCombo", 0);
+            int next = Math.Max(prev, value);
+            PlayerPrefs.SetInt("MaxCombo", next);
+        }
     }
 
     public MainUI mainUI;

@@ -5,6 +5,7 @@ public class Unit : MonoBehaviour
     [Header("Main Data")]
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float jumpPower;
+    [SerializeField] protected float maxAtk; // 최대 공격력
     [SerializeField] protected float atk;
     [SerializeField] protected float atkRange;
     [SerializeField] protected float maxHP;

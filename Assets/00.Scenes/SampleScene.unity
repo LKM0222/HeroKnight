@@ -22358,7 +22358,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   moveSpeed: 8
   jumpPower: 9
-  atk: 2
+  maxAtk: 20
+  atk: 5
   atkRange: 1
   maxHP: 100
   hp: 0
@@ -22384,9 +22385,9 @@ MonoBehaviour:
   rushDistance: 10
   rushStep: 0.5
   rushAtkDmg: 50
-  healAmount: 20
-  downSmashAtkDamage: 2
-  downSmashAtkArea: 3
+  healAmount: 50
+  downSmashAtkDamage: 25
+  downSmashAtkArea: 4
   isGrounded: 0
   isRoll: 0
   isBlocked: 0

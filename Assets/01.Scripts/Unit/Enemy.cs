@@ -45,17 +45,16 @@ public abstract class Enemy : Unit
     public virtual void Hit(float dmg) // 이건 외부에서 공격할 때 호출해야되니깐 public으로 설정
     {
         hp -= dmg;
-        float hpRatio = hp / maxHP;
-        hpBar.SetHPBar(hpRatio);
+        hpBar.SetHPBar(hp, maxHP);
         hitParticle.Emit(10);
+        GameManager.Instance.SetComboUI();
     }
 
     protected override void Start()
     {
         base.Start();
 
-        float hpRatio = hp / maxHP;
-        hpBar.SetHPBar(hpRatio);
+        hpBar.SetHPBar(hp, maxHP);
 
         findRangeCollider.size = new Vector2(findRange, objectCollider.size.y * 2f);
         findRangeCollider.offset = new Vector2(
