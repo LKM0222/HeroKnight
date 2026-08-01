@@ -4,6 +4,8 @@ Unity로 만든 2D 액션 플랫포머. 스테이지마다 몰려오는 적을 �
 
 **▶ [플레이하기](https://lkm0222.itch.io/hero-knight)** — 브라우저에서 바로 실행됩니다
 
+**▶ [Youtube](https://youtu.be/g0MNVzIDfsU)**
+
 > ⌨️ **키보드 전용 / 데스크톱 권장** — 모바일 브라우저에서는 조작할 수 없습니다.
 
 ---
