@@ -284,6 +284,8 @@ public class MainUI : MonoBehaviour
 
     public void OnClick_GameStart()
     {
+        SoundManager.Instance.PlaySound(SoundType.BGM);
+
         introUI.SetActive(false);
         finishUI.SetActive(false);
         if (finishTextCoroutine != null)
@@ -299,6 +301,7 @@ public class MainUI : MonoBehaviour
     {
         PlayerPrefs.SetInt("MaxCombo", 0);
         PlayerPrefs.SetInt("MaxStage", 0);
+        PlayerPrefs.Save();
     }
 
 }

@@ -14,6 +14,7 @@ public class GameManager : MonoSingleton<GameManager>
             int prev = PlayerPrefs.GetInt("MaxCombo", 0);
             int next = Math.Max(prev, value);
             PlayerPrefs.SetInt("MaxCombo", next);
+            PlayerPrefs.Save();
         }
     }
 

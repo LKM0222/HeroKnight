@@ -31,6 +31,11 @@ public class SoundManager : MonoSingleton<SoundManager>
                 break;
 
             case SoundType.BGM:
+                {
+                    var bgm = clipList.Find(x => x.type.Equals(type)).source;
+                    if (!bgm.isPlaying) bgm.Play();
+                }
+                break;
             case SoundType.Heal:
             case SoundType.ButtonClick:
             case SoundType.DownSmash:

@@ -90,6 +90,7 @@ public class StageManager : MonoSingleton<StageManager>
             nowStage++;
             isGameStart = false;
             PlayerPrefs.SetInt("MaxStage", Math.Max(nowStage, PlayerPrefs.GetInt("MaxStage", 0)));
+            PlayerPrefs.Save();
         }
 
         GameManager.Instance.mainUI.GameFinishUI();
